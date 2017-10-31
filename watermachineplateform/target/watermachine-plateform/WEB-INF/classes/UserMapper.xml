@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.terabits.mapper.UserMapper">
+
+
+    <resultMap id="consumeOrderMap" type="com.terabits.meta.po.User.ConsumeOrderPO">
+        <id property="id" column="id" javaType="java.lang.Integer"></id>
+        <result property="orderNo" column="orderno" javaType="java.lang.String"></result>
+        <result property="openId" column="openid" javaType="java.lang.String"></result>
+        <result property="displayId" column="displayid" javaType="java.lang.String"></result>
+        <result property="payment" column="payment" javaType="java.lang.Double"></result>
+        <result property="flow" column="flow" javaType="java.lang.Double"></result>
+        <result property="gmtCreate" column="gmtcreate" javaType="java.lang.String"></result>
+        <result property="gmtModify" column="gmtmodify" javaType="java.lang.String"></result>
+    </resultMap>
+
+    <resultMap id="userMap" type="com.terabits.meta.po.User.UserPO">
+        <id property="id" column="id" javaType="java.lang.Integer"></id>
+        <result property="openId" column="openid" javaType="java.lang.String"></result>
+        <result property="nickName" column="nickname" javaType="java.lang.String"></result>
+        <result property="phone" column="phone" javaType="java.lang.String"></result>
+        <result property="remain" column="remain" javaType="java.lang.Double"></result>
+        <result property="sex" column="sex" javaType="java.lang.Integer"></result>
+        <result property="language" column="language" javaType="java.lang.String"></result>
+        <result property="city" column="city" javaType="java.lang.String"></result>
+        <result property="province" column="province" javaType="java.lang.String"></result>
+        <result property="country" column="country" javaType="java.lang.String"></result>
+        <result property="headimgurl" column="headimgurl" javaType="java.lang.String"></result>
+    </resultMap>
+
+    <!-- 在各种标签中的id属性必须和接口中的方法名相同 ， id属性值必须是唯一的，不能够重复使用。parameterType属性指明查询时使用的参数类型，resultType属性指明查询返回的结果集类型-->
+    <!-- useGeneratedKeys：（ 仅 对 insert 有 用 ） 这 会 告 诉 MyBatis 使 用 JDBC 的getGeneratedKeys
+                方法来取出由数据（比如：像 MySQL 和 SQLServer 这样的数据库管理系统的自动递增字段）内部生成的主键。默认值： false。 -->
+    <!--keyProperty： （仅对 insert有用）标记一个属性， MyBatis 会通过 getGeneratedKeys或者通过 insert 语句的 selectKey 子元素设置它的值。默认：不设置。 -->
+    <!--#{}中的内容，为占位符，当参数为某个JavaBean时，表示放置该Bean对象的属性值  -->
+
+    <select id="selectConsumeOrderByDisplayId" parameterType="java.lang.String" resultMap="consumeOrderMap">
+        SELECT * FROM consumeorder WHERE displayid=#{displayId}
+    </select>
+
+    <!--多个参数不能用parameterType，且SQL语句中用arg来代替-->
+    <select id="selectConsumeOrderByTime" resultMap="consumeOrderMap">
+            select * from consumeorder where <![CDATA[displayid=#{arg0} and gmtcreate >= #{arg1} and gmtcreate <#{arg2}]]>
+    </select>
+
+    <select id="selectUserByNumber" resultMap="userMap">
+        SELECT * FROM user WHERE phone=#{phone}
+    </select>
+
+    <update id="updateUser" parameterType="com.terabits.meta.po.User.UserPO">
+        UPDATE user SET remain=#{remain} WHERE openid=#{openId}
+    </update>
+
+    <select id="selectAllUser" resultMap="userMap">
+        select * from user WHERE LENGTH (phone)=11
+    </select>
+</mapper>
