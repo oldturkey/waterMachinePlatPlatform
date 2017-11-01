@@ -24,6 +24,7 @@
 
     <mappers>
         <mapper resource="AdminMapper.xml" />
+        <mapper resource="DeviceMapper.xml" />
     </mappers>
 
 </configuration>
