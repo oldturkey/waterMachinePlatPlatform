@@ -23,7 +23,8 @@
         <result property="lastConnectTime" column="lastConnectTime" javaType="java.lang.String"></result>
         <result property="offlineTime" column="offlineTime" javaType="java.lang.Integer"></result>
     </resultMap>
-
+	
+	<!-- 设备编号  -->
     <select id="selectDisplayIdByAdmin" resultType="java.lang.String">
         select displayid from 
         <choose>
@@ -36,6 +37,7 @@
         </choose>
     </select>
     
+    <!-- 设备数量 -->
     <select id="selectDeviceNumberByAdmin" resultType="java.lang.Integer">
     	select count(*) from 
         <choose>
@@ -48,11 +50,17 @@
         </choose>
     </select>
     
+    <!-- 日供水总量（用户所有设备） -->
     <select id="selectTotalSupplyDayByAdmin" resultType="java.lang.Double">
     	select sum(consumeorder.flow) from 
         <choose>
         	<when test="type==1 || type==2 || type==3 || type==4">
-				consumeorder where to_days(gmtcreate) = to_days(now());
+				consumeorder 
+				<where>
+					<if test="beginTime!=null">
+						
+					</if>
+				</where> to_days(gmtcreate) = to_days(now());
 			</when>
 			<otherwise>
 				consumeorder, terminal_admin 
@@ -63,6 +71,7 @@
         </choose>
     </select>
     
+    <!-- 月供水总量（用户所有设备） -->
     <select id="selectTotalSupplyMonthByAdmin" resultType="java.lang.Double">
     	select sum(consumeorder.flow) from 
         <choose>
