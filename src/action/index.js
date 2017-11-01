@@ -14,6 +14,7 @@ export const receiveData = (data, category) => ({
     category
 });
 /**
+ * 
  * 请求数据调用方法
  * @param funcName      请求接口的函数名
  * @param params        请求接口的参数
