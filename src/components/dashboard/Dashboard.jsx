@@ -12,13 +12,13 @@ class Dashboard extends React.Component {
         return (
             <div className="gutter-example button-demo">
                 <BreadcrumbCustom />
-                <Row gutter={50}>
+                <Row gutter={30}>
                     <Col className="gutter-row" md={12}>
                         <div className="gutter-box">
                             <Card bordered={false}>
                                 <div className="clear y-center">
                                     <div className="pull-left mr-m">
-                                        <Icon type="user" className="text-2x text-danger" />
+                                        <Icon type="user" className="text-2x text-danger"/>
                                     </div>
                                     <div className="clear">
                                         <div className="text-muted">用户数</div>
@@ -26,15 +26,15 @@ class Dashboard extends React.Component {
                                     </div>
                                     <div className="clear">
                                         <div className="text-muted">当日/当月消费</div>
-                                        <h2>301</h2>
+                                        <h2>¥ 126,560</h2>
                                     </div>
                                     <div className="clear">
                                         <div className="text-muted">当日/当月充值</div>
-                                        <h2>301</h2>
+                                        <h2>¥ 301</h2>
                                     </div>
                                     <div className="clear">
                                         <div className="text-muted">当日/当月赠送</div>
-                                        <h2>301</h2>
+                                        <h2>¥ 301</h2>
                                     </div>
                                 </div>
                             </Card>
@@ -69,7 +69,7 @@ class Dashboard extends React.Component {
                     </Col>
                     <Col className="gutter-row" md={24}>
                         <div className="gutter-box">
-                            <Card bordered={false} title="实时信息（1小时）" className={'no-padding'}>
+                            <Card bordered={false} title="实时信息（1小时内）" className={'no-padding'}>
                                 <HomeTable />
                             </Card>
                         </div>

@@ -1,25 +1,35 @@
 import React from 'react';
 import { Table } from 'antd';
-
+import { getAlertTable } from '../../axios';
 
 export default class alertTable extends React.Component {
   constructor(props) {
     super(props);
-    this.state={date: data}
+    this.state={
+      data: [],
+      loading: false,
+    }
   }
 
   componentDidMount() {
-    
-  }
-
-  componentWillUnmount() {
-    
-  }
-
-
+   this.start();
+    }
+    start = () => {
+        this.setState({ loading: true });
+        getAlertTable().then(res => {
+          let i = 0;
+            this.setState({
+                data: [...res.offlineTerminal.map(val => {
+                    val.key = ++i;
+                    return val;
+                })],
+                loading: false
+            });
+        });
+    };
   render() {
     return (
-       <Table columns={columns} dataSource={data}/>
+       <Table columns={columns} dataSource={this.state.data} loading={this.state.loading} bordered/>
     );
   }
 }
@@ -29,6 +39,10 @@ const columns = [{
     dataIndex: 'displayId',
     key: 'displayId',
 }, {
+    title: '设备位置',
+    dataIndex: 'location',
+    key: 'location',
+},{
     title: 'Sim卡号',
     dataIndex: 'simId',
     key: 'simId',
@@ -44,22 +58,5 @@ const columns = [{
     title: '掉线时长',
     dataIndex: 'offlineTime',
     key: 'offlineTime',
-}];
-
-const data = [{
-    key: '1',
-    displayId: '001',
-    simId: 32,
-    imei: '111',
-}, {
-    key: '2',
-    displayId: '002',
-    simId: 42,
-    imei: '222',
-}, {
-    key: '3',
-    displayId: '003',
-    simId: 32,
-    imei: '333',
 }];
 

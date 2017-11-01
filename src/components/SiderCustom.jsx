@@ -74,6 +74,30 @@ class SiderCustom extends Component {
                         <Link to={'/app/dashboard/index'}><Icon type="mobile" /><span className="nav-text">首页</span></Link>
                     </Menu.Item>
                     <SubMenu
+                        key="/app/device"
+                        title={<span><Icon type="database" /><span className="nav-text">设备管理</span></span>}
+                    >
+                        <Menu.Item key="/app/device/statistics"><Link to={'/app/device/statistics'}>设备统计</Link></Menu.Item>
+                        <Menu.Item key="/app/device/supply"><Link to={'/app/device/supply'}>设备供水信息</Link></Menu.Item>
+                        <Menu.Item key="/app/device/connect"><Link to={'/app/device/connect'}>设备连接信息</Link></Menu.Item>
+                        <Menu.Item key="/app/device/manage"><Link to={'/app/device/manage'}>设备权限管理</Link></Menu.Item>
+                    </SubMenu>
+                    <SubMenu
+                        key="/app/user"
+                        title={<span><Icon type="user" /><span className="nav-text">查询管理</span></span>}
+                    >
+                        <Menu.Item key="/app/user/statistics"><Link to={'/app/user/statistics'}>设备统计</Link></Menu.Item>
+                        <Menu.Item key="/app/user/info"><Link to={'/app/user/info'}>设备供水信息</Link></Menu.Item>
+                    </SubMenu>
+                    <SubMenu
+                        key="/app/query"
+                        title={<span><Icon type="search" /><span className="nav-text">设备管理</span></span>}
+                    >
+                        <Menu.Item key="/app/query/payment"><Link to={'/app/query/payment'}>消费记录查询</Link></Menu.Item>
+                        <Menu.Item key="/app/query/recharge"><Link to={'/app/query/recharge'}>充值记录查询</Link></Menu.Item>
+                        <Menu.Item key="/app/query/supply"><Link to={'/app/query/supply'}>设备供水查询</Link></Menu.Item>
+                    </SubMenu>
+                    <SubMenu
                         key="/app/ui"
                         title={<span><Icon type="scan" /><span className="nav-text">UI</span></span>}
                     >

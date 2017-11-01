@@ -12,7 +12,7 @@ export const receiveData = (data, category) => ({
     type: type.RECEIVE_DATA,
     data,
     category
-});
+}); 
 /**
  * 
  * 请求数据调用方法

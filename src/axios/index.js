@@ -17,9 +17,6 @@ export const getPros = () => axios.post('http://api.xitu.io/resources/github', {
     console.log(error);
 });
 
-export const npmDependencies = () => axios.get('./npm.json').then(res => res.data).catch(err => console.log(err));
-
-export const weibo = () => axios.get('./weibo.json').then(res => res.data).catch(err => console.log(err));
 
 const GIT_OAUTH = 'https://github.com/login/oauth';
 export const gitOauthLogin = () => axios.get(`${GIT_OAUTH}/authorize?client_id=792cdcd244e98dcd2dee&redirect_uri=http://localhost:3006/&scope=user&state=reactAdmin`);
@@ -37,3 +34,28 @@ export const admin = () => get({url: config.MOCK_AUTH_ADMIN});
 
 // 访问权限获取
 export const guest = () => get({url: config.MOCK_AUTH_VISITOR});
+
+
+
+//测试代码
+export const getAlertTable = () => axios.get('./npm1.json').then(res => res.data).catch(err => console.log(err));
+// export const getAlertTable = () =>({
+//      method: 'post',
+//      url: '/home/device/hour-alarm',
+//      headers: {'Authorization': 'token'},
+// }).then(function (response) {
+//     return response.data;
+// }).catch(function (error) {
+//     console.log(error);
+// });
+
+export const adminUser = () => axios.post('/login', {
+    name:"",
+    password:"",
+}).then(function (response) {
+    return response.data;
+}).catch(function (error) {
+    console.log(error);
+});
+
+

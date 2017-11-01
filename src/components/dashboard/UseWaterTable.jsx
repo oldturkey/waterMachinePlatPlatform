@@ -19,7 +19,7 @@ export default class UseWaterTable extends React.Component {
 
   render() {
     return (
-       <Table columns={columns} dataSource={data}/>
+      <Table columns={columns} dataSource={data} bordered/>
     );
   }
 }
