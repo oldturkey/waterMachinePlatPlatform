@@ -1,0 +1,7 @@
+*.db
+*.iml
+*.classpath
+*.project
+/.idea/*
+/watermachineplatform/*
+/target/*
