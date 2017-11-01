@@ -21,6 +21,7 @@ public class DeviceController {
     JSONObject login(@RequestParam(value = "name") String name,
                         @RequestParam(value = "password") String password) throws Exception{
 		System.out.println(deviceService.getDisplayIdByAdmin(name, 5));
+		System.out.println("123");
         return null;
     }
 }
