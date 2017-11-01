@@ -73,7 +73,7 @@ public class AdminDAOImpl implements AdminDAO {
 		SqlSession session = DBTools.getSession();
 		AdminMapper mapper = session.getMapper(AdminMapper.class);
 		try {
-        	return mapper.selectAuthorityByTypeAndUrl("admin_type_" + type, url);
+        	return mapper.selectAuthorityByTypeAndUrl("admin_type_" + type, "'" + url + "'");
         } catch (Exception e) {
             e.printStackTrace();
             return null;
