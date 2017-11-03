@@ -19,8 +19,8 @@ public class LoginController {
 	
 	@RequestMapping(value = "/login",method = RequestMethod.POST)
     public @ResponseBody
-    JSONObject login(@RequestParam(value = "name") String name,
-                        @RequestParam(value = "password") String password) throws Exception{
+    JSONObject login(@RequestParam(value = "name") String name, 
+    		@RequestParam(value = "password") String password) throws Exception{
         return adminService.login(name, password);
     }
 }

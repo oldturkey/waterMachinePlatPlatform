@@ -93,14 +93,21 @@ public class PlatformGlobal {
         String responseReg = httpsUtil.doPostJsonForString(urlReg, header, jsonRequest);
         Map<String, String> data = new HashMap<String, String>();
         data = JsonUtil.jsonString2SimpleObj(responseReg, data.getClass());
+        
+        if (data.get("error_code").equals("100416")) {
+        	//已注册该设备
+        	JSONObject jsonObject = new JSONObject();
+            jsonObject.put("error", 100416);
+            return jsonObject;
+        }
         String deviceId = data.get("deviceId");
-
 
         System.out.println("RegisterDirectlyConnectedDevice, response content:");
 
         System.out.println(deviceId);
 
         JSONObject jsonObject = new JSONObject();
+        jsonObject.put("error", 0);
         jsonObject.put("token", accessToken);
         jsonObject.put("deviceId", deviceId);
 

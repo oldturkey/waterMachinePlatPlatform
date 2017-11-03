@@ -30,8 +30,8 @@ public class MainPageController {
 	
 	@RequestMapping(value = "/home/device/info",method = RequestMethod.GET)
     public @ResponseBody
-    JSONObject deviceInfo(@RequestParam(value = "Authorization") String clientToken,
-                        HttpServletResponse response) throws Exception {
+    JSONObject deviceInfo(@RequestParam(value = "Authorization") String clientToken, 
+    		HttpServletResponse response) throws Exception {
 		AdminPO adminPO = JWT.unsign(clientToken, AdminPO.class);
 		if (adminPO == null) {
 			JSONObject jsonObject = new JSONObject();
@@ -50,8 +50,8 @@ public class MainPageController {
 	
 	@RequestMapping(value = "/home/delivery/hour-record",method = RequestMethod.GET)
     public @ResponseBody
-    JSONObject supplyHourRecord(@RequestParam(value = "Authorization") String clientToken,
-                        HttpServletResponse response) throws Exception {
+    JSONObject supplyHourRecord(@RequestParam(value = "Authorization") String clientToken, 
+    		HttpServletResponse response) throws Exception {
 		AdminPO adminPO = JWT.unsign(clientToken, AdminPO.class);
 		if (adminPO == null) {
 			JSONObject jsonObject = new JSONObject();
@@ -78,8 +78,8 @@ public class MainPageController {
 	
 	@RequestMapping(value = "/home/device/hour-alarm",method = RequestMethod.GET)
     public @ResponseBody
-    JSONObject alarmRecord(@RequestParam(value = "Authorization") String clientToken,
-                        HttpServletResponse response) throws Exception {
+    JSONObject alarmRecord(@RequestParam(value = "Authorization") String clientToken, 
+    		HttpServletResponse response) throws Exception {
 		AdminPO adminPO = JWT.unsign(clientToken, AdminPO.class);
 		if (adminPO == null) {
 			JSONObject jsonObject = new JSONObject();
@@ -98,7 +98,7 @@ public class MainPageController {
 		calendar.add(Calendar.HOUR, -1);
 		String beginTime = df.format(calendar.getTime());
 		JSONObject jsonObject = new JSONObject();
-		JSONArray alarm = deviceService.getDeviceOfflineAlarm(adminPO.getName(), adminPO.getType(), beginTime, endTime);
+		JSONArray alarm = deviceService.getDeviceOfflineAlarm(adminPO.getName(), adminPO.getType(), null, beginTime, endTime);
 		jsonObject.put("status", 1);
 		jsonObject.put("alarm", alarm);
 		return jsonObject;
