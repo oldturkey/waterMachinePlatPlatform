@@ -12,6 +12,8 @@ import DeviceManage from '../components/device/DeviceManage';
 import UserStatistics from '../components/user/UserStatistics';
 import UserInfo from '../components/user/UserInfo';
 import Payment from '../components/query/Payment';
+import Recharge from '../components/query/Recharge';
+import Supply from '../components/query/Supply';
 import BasicForm from '../components/forms/BasicForm';
 import BasicTable from '../components/tables/BasicTables';
 import AdvancedTable from '../components/tables/AdvancedTables';
@@ -66,7 +68,8 @@ export default class CRouter extends Component {
                         </Route>
                         <Route path={'query'}>
                             <Route path={'payment'} component={Payment} /> 
-                               
+                             <Route path={'recharge'} component={Recharge}/>
+                             <Route path={'supply'} component={Supply}/>
                         </Route>
                         <Route path={'form'}>
                             <Route path={'basicForm'} component={BasicForm} />

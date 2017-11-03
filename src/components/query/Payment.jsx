@@ -2,7 +2,6 @@
 import React from 'react';
 import { Row, Col, Card, Form, Input, Select, Icon, Button, Dropdown, Menu, InputNumber, DatePicker, Modal, message,Table } from 'antd';
 import BreadcrumbCustom from '../BreadcrumbCustom';
-
 import styles from './TableList.less';
 const FormItem = Form.Item;
 const RangePicker = DatePicker.RangePicker;
@@ -11,23 +10,14 @@ const flowColumns = [{
         title: '设备编号',
         dataIndex: 'displayId',
       },{
-        title: '设备地址',
-        dataIndex: 'location',
+        title: '手机号',
+        dataIndex: 'phone',
       }, {
-        title: 'SIM卡号',
-        dataIndex: 'simId',
+        title: '消费时间',
+        dataIndex: 'time',
       },{
-        title: 'IMEI号',
-        dataIndex: 'imei',
-      },{
-        title: '状态',
-        dataIndex: 'monthFlow',
-      },{
-        title: '掉线时间',
-        dataIndex: 'lastConnectTime',
-      },{
-        title: '断线时长',
-        dataIndex: 'offlineTime',
+        title: '消费金额',
+        dataIndex: 'payment',
       }];
 class Payment extends React.Component {
     constructor(props) {
@@ -62,20 +52,17 @@ class Payment extends React.Component {
                                     <Form onSubmit={this.handleSearch} layout="inline">
                                       <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
                                         <Col md={7} sm={24} offset={2}>
-                                          <FormItem label="规则编号">
+                                          <FormItem label="手机号">
                                             {getFieldDecorator('no')(
                                               <Input placeholder="请输入" />
                                             )}
                                           </FormItem>
                                         </Col>
                                         <Col md={7} sm={24}>
-                                          <FormItem label="使用状态">
-                                            {getFieldDecorator('status')(
-                                              <Select placeholder="请选择" style={{ width: '100%' }}>
-                                                <Option value="0">关闭</Option>
-                                                <Option value="1">运行中</Option>
-                                              </Select>
-                                            )}
+                                          <FormItem {...formItemLayout} label={`订单时间`} >
+                                          {getFieldDecorator(`orderTime`)(
+                                             <RangePicker showTime format="YYYY-MM-DD HH:mm:ss" />
+                                          )}
                                           </FormItem>
                                         </Col>
                                         <Col md={4} sm={24} style={{marginTop:'20'}}>
