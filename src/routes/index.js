@@ -5,6 +5,13 @@ import React, { Component } from 'react';
 import { Router, Route, hashHistory, IndexRedirect } from 'react-router';
 import App from '../App';
 import Page from '../components/Page';
+import DeviceStatistics from '../components/device/deviceStatistics';
+import DeviceSupply from '../components/device/DeviceSupply';
+import DeviceConnect from '../components/device/DeviceConnect';
+import DeviceManage from '../components/device/DeviceManage';
+import UserStatistics from '../components/user/UserStatistics';
+import UserInfo from '../components/user/UserInfo';
+import Payment from '../components/query/Payment';
 import BasicForm from '../components/forms/BasicForm';
 import BasicTable from '../components/tables/BasicTables';
 import AdvancedTable from '../components/tables/AdvancedTables';
@@ -47,6 +54,20 @@ export default class CRouter extends Component {
                 <Route path={'/'} components={Page}>
                     <IndexRedirect to="/app/dashboard/index" />
                     <Route path={'app'} component={App}>
+                        <Route path={'device'}>
+                            <Route path={'statistics'} component={DeviceStatistics} />
+                            <Route path={'supply'} component={DeviceSupply} />
+                            <Route path={'connect'} component={DeviceConnect} />
+                            <Route path={'manage'} component={DeviceManage} />
+                        </Route>
+                        <Route path={'user'}>
+                            <Route path={'statistics'} component={UserStatistics} /> 
+                            <Route path={'info'} component={UserInfo} />   
+                        </Route>
+                        <Route path={'query'}>
+                            <Route path={'payment'} component={Payment} /> 
+                               
+                        </Route>
                         <Route path={'form'}>
                             <Route path={'basicForm'} component={BasicForm} />
                         </Route>

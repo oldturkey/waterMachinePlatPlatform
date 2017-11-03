@@ -29,4 +29,4 @@ const httpData = (state = {}, action) => {
 
 export default combineReducers({
     httpData
-}); 
+});     

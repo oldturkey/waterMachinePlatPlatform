@@ -84,14 +84,14 @@ class SiderCustom extends Component {
                     </SubMenu>
                     <SubMenu
                         key="/app/user"
-                        title={<span><Icon type="user" /><span className="nav-text">查询管理</span></span>}
+                        title={<span><Icon type="user" /><span className="nav-text">用户管理</span></span>}
                     >
-                        <Menu.Item key="/app/user/statistics"><Link to={'/app/user/statistics'}>设备统计</Link></Menu.Item>
-                        <Menu.Item key="/app/user/info"><Link to={'/app/user/info'}>设备供水信息</Link></Menu.Item>
+                        <Menu.Item key="/app/user/statistics"><Link to={'/app/user/statistics'}>用户统计</Link></Menu.Item>
+                        <Menu.Item key="/app/user/info"><Link to={'/app/user/info'}>用户信息及操作</Link></Menu.Item>
                     </SubMenu>
                     <SubMenu
                         key="/app/query"
-                        title={<span><Icon type="search" /><span className="nav-text">设备管理</span></span>}
+                        title={<span><Icon type="search" /><span className="nav-text">查询管理</span></span>}
                     >
                         <Menu.Item key="/app/query/payment"><Link to={'/app/query/payment'}>消费记录查询</Link></Menu.Item>
                         <Menu.Item key="/app/query/recharge"><Link to={'/app/query/recharge'}>充值记录查询</Link></Menu.Item>
