@@ -223,7 +223,7 @@
         group by terminal.displayid, terminal.location, terminal.gmtcreate
     </select>
     
-    <insert id="insertTerminal" useGeneratedKeys="true" keyProperty="id" parameterType="com.terabits.mata.po.TerminalPO">
+    <insert id="insertTerminal" useGeneratedKeys="true" keyProperty="id" parameterType="com.terabits.meta.po.TerminalPO">
     	insert into terminal (imei, deviceid, displayid, webid, state, location, simid, simremain, gmtcreate, gmtmodified) values
     	(#{imei}, #{deviceid}, #{displayid}, #{webid}, #{simid}, #{location}, #{simremain}, now(), now())
     </insert>
