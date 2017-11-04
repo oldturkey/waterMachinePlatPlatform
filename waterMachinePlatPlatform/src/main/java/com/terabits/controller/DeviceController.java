@@ -168,4 +168,58 @@ public class DeviceController {
 		jsonObject.put("status", 1);
 		return jsonObject;
     }
+	
+	@RequestMapping(value = "/device/manage",method = RequestMethod.GET)
+    public @ResponseBody
+    JSONObject deviceManage(@RequestParam(value = "Authorization") String clientToken,
+    		HttpServletRequest request, HttpServletResponse response) throws Exception {
+		
+		String displayid = request.getParameter("displayid");
+		
+		AdminPO adminPO = JWT.unsign(clientToken, AdminPO.class);
+		if (adminPO == null) {
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("status", 0);
+			return jsonObject;
+		}
+		if (!adminService.authConfirm(adminPO.getType(), "/device/manage")) {
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("status", 0);
+			return jsonObject;
+		}
+		JSONArray manageInfo = deviceService.getDeviceManageInfo(adminPO.getName(), adminPO.getType(), displayid);
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("status", 1);
+		jsonObject.put("info", manageInfo);
+		return jsonObject;
+    }
+	
+	@RequestMapping(value = "/query/device/supply",method = RequestMethod.GET)
+    public @ResponseBody
+    JSONObject deviceSupplyQuery(@RequestParam(value = "Authorization") String clientToken,
+    		HttpServletRequest request, HttpServletResponse response) throws Exception {
+		
+		String displayid = request.getParameter("displayid");
+		String location = request.getParameter("location");
+		String phone = request.getParameter("phone");
+		String beginTime = request.getParameter("beginTime");
+		String endTime = request.getParameter("endTime");
+		
+		AdminPO adminPO = JWT.unsign(clientToken, AdminPO.class);
+		if (adminPO == null) {
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("status", 0);
+			return jsonObject;
+		}
+		if (!adminService.authConfirm(adminPO.getType(), "/query/device/supply")) {
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("status", 0);
+			return jsonObject;
+		}
+		JSONArray supplyInfo = deviceService.getDeviceSupplyRecord(adminPO.getName(), adminPO.getType(), displayid, location, phone, beginTime, endTime);
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("status", 1);
+		jsonObject.put("info", supplyInfo);
+		return jsonObject;
+    }
 }

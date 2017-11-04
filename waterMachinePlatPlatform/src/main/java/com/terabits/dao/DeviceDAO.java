@@ -46,15 +46,21 @@ public interface DeviceDAO {
 	 * @return
 	 */
 	public double selectTotalIncomeByAdmin(@Param("name") String name, @Param("type") int type, @Param("beginTime") String beginTime, @Param("endTime") String endTime);
+	
 	/**
 	 * 设备供水记录查询
 	 * @param name
 	 * @param type
+	 * @param displayid
+	 * @param location
+	 * @param phone
+	 * @param beginTime
+	 * @param endTime
 	 * @return
 	 */
-	
 	public List<DeviceSupplyRecordVO> 
-	selectDeviceSupplyRecordByAdmin(@Param("name") String name, @Param("type") int type, @Param("beginTime") String beginTime, @Param("endTime") String endTime);
+	selectDeviceSupplyRecordByAdmin(@Param("name") String name, @Param("type") int type, @Param("displayid") String displayid, @Param("location") String location, 
+			@Param("phone") String phone, @Param("beginTime") String beginTime, @Param("endTime") String endTime);
 	
 	/**
 	 * 设备报警记录查询
@@ -130,4 +136,12 @@ public interface DeviceDAO {
 	 */
 	public int selectOfflineCounts(@Param("name") String name, @Param("type") int type, @Param("displayid") String displayid, @Param("beginTime") String beginTime, @Param("endTime") String endTime);
 
+	/**
+	 * 查询用户设备
+	 * @param name
+	 * @param type
+	 * @param displayid
+	 * @return
+	 */
+	public List<TerminalPO> selectTerminalByAdmin(@Param("name") String name, @Param("type") int type, @Param("displayid") String displayid);
 }

@@ -34,7 +34,7 @@ public interface DeviceService {
 	 * @param endTime
 	 * @return
 	 */
-	public JSONArray getDeviceSupplyRecord(String name, int type, String beginTime, String endTime);
+	public JSONArray getDeviceSupplyRecord(String name, int type, String displayid, String location, String phone, String beginTime, String endTime);
 	
 	/**
 	 * 获取设备断线报警信息，包括设备编号，设备位置，sim卡号，imei卡号，最后连接时刻，断线时长
@@ -88,4 +88,13 @@ public interface DeviceService {
 	 * @return
 	 */
 	public JSONObject getDeviceConnectInfo(String name, int type, String displayid, String beginTime, String endTime);
+	
+	/**
+	 * 设备管理信息，包括设备基本信息
+	 * @param name
+	 * @param type
+	 * @param displayid
+	 * @return
+	 */
+	public JSONArray getDeviceManageInfo(String name, int type, String displayid);
 }

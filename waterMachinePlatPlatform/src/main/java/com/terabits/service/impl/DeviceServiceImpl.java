@@ -55,8 +55,8 @@ public class DeviceServiceImpl implements DeviceService {
 		return jsonObject;
 	}
 
-	public JSONArray getDeviceSupplyRecord(String name, int type, String beginTime, String endTime) {
-		List<DeviceSupplyRecordVO> deviceSupplyRecordVOS = deviceDAO.selectDeviceSupplyRecordByAdmin(name, type, beginTime, endTime);
+	public JSONArray getDeviceSupplyRecord(String name, int type, String displayid, String location, String phone, String beginTime, String endTime) {
+		List<DeviceSupplyRecordVO> deviceSupplyRecordVOS = deviceDAO.selectDeviceSupplyRecordByAdmin(name, type, displayid, location, phone, beginTime, endTime);
 		JSONArray record = JSONArray.fromObject(deviceSupplyRecordVOS);
 		return record;
 	}
@@ -157,6 +157,12 @@ public class DeviceServiceImpl implements DeviceService {
 		jsonObject.put("offlineDeviceNumber", offlineDeviceNumber);
 		jsonObject.put("alarmInfo", alarmInfo);
 		return jsonObject;
+	}
+
+	public JSONArray getDeviceManageInfo(String name, int type, String displayid) {
+		List<TerminalPO> terminalPOs = deviceDAO.selectTerminalByAdmin(name, type, displayid);
+		JSONArray jsonArray = JSONArray.fromObject(terminalPOs);
+		return jsonArray;
 	}
 
 }

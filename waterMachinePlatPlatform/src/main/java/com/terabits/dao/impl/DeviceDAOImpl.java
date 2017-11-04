@@ -3,7 +3,6 @@ package com.terabits.dao.impl;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
@@ -74,13 +73,13 @@ public class DeviceDAOImpl implements DeviceDAO {
         return income;
 	}
 
-	public List<DeviceSupplyRecordVO> selectDeviceSupplyRecordByAdmin(String name, int type, String beginTime,
-			String endTime) {
+	public List<DeviceSupplyRecordVO> selectDeviceSupplyRecordByAdmin(String name, int type, String displayid, 
+			String location, String phone, String beginTime, String endTime) {
 		SqlSession session = DBTools.getSession();
         DeviceMapper mapper = session.getMapper(DeviceMapper.class);
         List<DeviceSupplyRecordVO> deviceSupplyRecordVOS = null;
         try {
-        	deviceSupplyRecordVOS = mapper.selectDeviceSupplyRecordByAdmin(name, type, beginTime, endTime);
+        	deviceSupplyRecordVOS = mapper.selectDeviceSupplyRecordByAdmin(name, type, displayid, location, phone, beginTime, endTime);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -222,6 +221,20 @@ public class DeviceDAOImpl implements DeviceDAO {
         	session.close();
         }
         return count;
+	}
+
+	public List<TerminalPO> selectTerminalByAdmin(String name, int type, String displayid) {
+		SqlSession session = DBTools.getSession();
+        DeviceMapper mapper = session.getMapper(DeviceMapper.class);
+        List<TerminalPO> terminalPOs = null;
+        try {
+        	terminalPOs = mapper.selectTerminalByAdmin(name, type, displayid);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+        	session.close();
+        }
+        return terminalPOs;
 	}
 
 }

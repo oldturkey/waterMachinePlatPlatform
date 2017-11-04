@@ -6,10 +6,11 @@ public class TerminalPO {
 	private String displayid;
 	private String webid;
 	private Integer state;
-	private Integer strength;
+	private Double strength;
 	private String location;
 	private String simid;
 	private Double simremain;
+	private String registerTime;
 	
 	public String getImei() {
 		return this.imei;
@@ -51,11 +52,11 @@ public class TerminalPO {
 		this.state = state;
 	}
 	
-	public Integer getStrength() {
+	public Double getStrength() {
 		return this.strength;
 	}
 	
-	public void setStrength(Integer strength) {
+	public void setStrength(Double strength) {
 		this.strength = strength;
 	}
 	
@@ -81,5 +82,13 @@ public class TerminalPO {
 	
 	public void setSimremain(Double simremain) {
 		this.simremain =simremain;
+	}
+	
+	public String getRegisterTime() {
+		return this.registerTime;
+	}
+	
+	public void setRegisterTime(String registerTime) {
+		this.registerTime = registerTime;
 	}
 }

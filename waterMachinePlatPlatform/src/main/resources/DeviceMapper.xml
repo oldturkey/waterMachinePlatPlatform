@@ -10,6 +10,7 @@
     <resultMap id="deviceSupplyRecordMap" type="com.terabits.meta.vo.DeviceSupplyRecordVO">
         <result property="displayid" column="displayid" javaType="java.lang.String"></result>
         <result property="location" column="location" javaType="java.lang.String"></result>
+        <result property="phone" column="phone" javaType="java.lang.String"></result>
         <result property="payment" column="payment" javaType="java.lang.Double"></result>
         <result property="flow" column="flow" javaType="java.lang.Double"></result>
         <result property="time" column="time" javaType="java.lang.String"></result>
@@ -44,6 +45,7 @@
         <result property="location" column="location" javaType="java.lang.String"></result>
         <result property="simid" column="simid" javaType="java.lang.String"></result>
         <result property="simremain" column="simremain" javaType="java.lang.Double"></result>
+        <result property="registerTime" column="gmtcreate" javaType="java.lang.String"></result>
     </resultMap>
 
     <select id="selectDisplayIdByAdmin" resultType="java.lang.String">
@@ -129,22 +131,51 @@
     </select>
     
     <select id="selectDeviceSupplyRecordByAdmin" resultMap="deviceSupplyRecordMap">
-    	select consumeorder.displayid as displayid, terminal.location as location, consumeorder.payment as payment, 
-    		consumeorder.flow as flow, consumeorder.gmtcreate as time from 
+    	select consumeorder.displayid as displayid, terminal.location as location, user.phone as phone, 
+    	consumeorder.payment as payment, consumeorder.flow as flow, consumeorder.gmtcreate as time from 
     	<choose>
         	<when test="type==1 || type==2 || type==3 || type==4">
-				consumeorder, terminal 
-				where consumeorder.displayid=terminal.displayid 
-					and consumeorder.gmtcreate >= #{beginTime}
-					and consumeorder.gmtcreate &lt; #{endTime};
+				consumeorder, terminal, user 
+				<where>
+					consumeorder.displayid=terminal.displayid and consumeorder.openid=user.openid 
+					<if test="displayid!=null">
+						and consumeorder.displayid = #{displayid}
+					</if>
+					<if test="location!=null">
+						and terminal.location = #{location}
+					</if>
+					<if test="phone!=null">
+						and user.phone = #{phone}
+					</if>
+					<if test="beginTime!=null">
+						and consumeorder.gmtcreate >= #{beginTime}
+					</if>
+					<if test="endTime!=null">
+						and consumeorder.gmtcreate &lt; #{endTime}
+					</if>
+				</where>
 			</when>
 			<otherwise>
 				consumeorder, terminal, terminal_admin 
-				where consumeorder.displayid=terminal_admin.displayid 
-					and consumeorder.displayid=terminal.displayid
-					and terminal_admin.admin_name=#{name} 
-					and consumeorder.gmtcreate >= #{beginTime}
-					and consumeorder.gmtcreate &lt; #{endTime};
+				<where>
+					consumeorder.displayid=terminal.displayid and consumeorder.openid=user.openid 
+					and terminal.displayid=terminal_admin.displayid and admin_name=#{name}
+					<if test="displayid!=null">
+						and consumeorder.displayid = #{displayid}
+					</if>
+					<if test="location!=null">
+						and terminal.location = #{location}
+					</if>
+					<if test="phone!=null">
+						and user.phone = #{phone}
+					</if>
+					<if test="beginTime!=null">
+						and consumeorder.gmtcreate >= #{beginTime}
+					</if>
+					<if test="endTime!=null">
+						and consumeorder.gmtcreate &lt; #{endTime}
+					</if>
+				</where>
 			</otherwise>
         </choose>
     </select>
@@ -162,10 +193,10 @@
 						and terminal.displayid = #{displayid}
 					</if>
 					<if test="beginTime!=null">
-						and terminalofflinerecord.beginTime >= #{beginTime}
+						and terminalofflinerecord.gmtcreate >= #{beginTime}
 					</if>
 					<if test="endTime!=null">
-						and terminalofflinerecord.endTime &lt; #{endTime}
+						and terminalofflinerecord.gmtcreate &lt; #{endTime}
 					</if>
 				</where>
 			</when>
@@ -177,10 +208,10 @@
 						and terminal.displayid = #{displayid}
 					</if>
 					<if test="beginTime!=null">
-						and terminalofflinerecord.beginTime >= #{beginTime}
+						and terminalofflinerecord.gmtcreate >= #{beginTime}
 					</if>
 					<if test="endTime!=null">
-						and terminalofflinerecord.endTime &lt; #{endTime}
+						and terminalofflinerecord.gmtcreate &lt; #{endTime}
 					</if>
 				</where>
 			</otherwise>
@@ -240,11 +271,11 @@
     </delete>
     
     <select id="selectTerminalByDisplayid" parameterType="java.lang.String" resultMap="terminalMap">
-    	select imei, deviceid, displayid, webid, state, strength, location, simid, simremain from terminal where displayid=#{displayid}
+    	select * from terminal where displayid=#{displayid}
     </select>
     
     <select id="selectTerminalByImei" parameterType="java.lang.String" resultMap="terminalMap">
-    	select imei, deviceid, displayid, webid, state, strength, location, simid, simremain from terminal where imei=#{imei}
+    	select * from terminal where imei=#{imei}
     </select>
     
     <update id="updateTerminalWebid" parameterType="java.lang.String">
@@ -262,10 +293,10 @@
 						and terminal.displayid = #{displayid}
 					</if>
 					<if test="beginTime!=null">
-						and terminalofflinerecord.beginTime >= #{beginTime}
+						and terminalofflinerecord.gmtcreate >= #{beginTime}
 					</if>
 					<if test="endTime!=null">
-						and terminalofflinerecord.endTime &lt; #{endTime}
+						and terminalofflinerecord.gmtcreate &lt; #{endTime}
 					</if>
 				</where>
 			</when>
@@ -277,13 +308,39 @@
 						and terminal.displayid = #{displayid}
 					</if>
 					<if test="beginTime!=null">
-						and terminalofflinerecord.beginTime >= #{beginTime}
+						and terminalofflinerecord.gmtcreate >= #{beginTime}
 					</if>
 					<if test="endTime!=null">
-						and terminalofflinerecord.endTime &lt; #{endTime}
+						and terminalofflinerecord.gmtcreate &lt; #{endTime}
 					</if>
 				</where>
 			</otherwise>
         </choose>
+    </select>
+    
+    <select id="selectTerminalByAdmin" resultMap="terminalMap">
+    	select * from 
+    	<choose>
+        	<when test="type==1 || type==2 || type==3 || type==4">
+				terminal 
+				<where>
+					<if test="displayid!='all'">
+						and terminal.displayid = #{displayid}
+					</if>
+				</where>
+			</when>
+			<otherwise>
+				terminal, terminal_admin
+				<where>
+					terminal.displayid=terminal_admin.displayid and terminal_admin.admin_name=#{name}
+					<if test="displayid!='all'">
+						and terminal.displayid = #{displayid}
+					</if>
+				</where>
+			</otherwise>
+        </choose>
+    </select>
+    
+    <select id="selectDeviceSupplyQuery">
     </select>
 </mapper>

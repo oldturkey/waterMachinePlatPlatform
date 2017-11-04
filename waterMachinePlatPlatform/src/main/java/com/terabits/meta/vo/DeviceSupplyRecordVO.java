@@ -4,6 +4,7 @@ public class DeviceSupplyRecordVO {
 	
 	private String displayid;
 	private String location;
+	private String phone;
 	private Double payment;
 	private Double flow;
 	private String time;
@@ -22,6 +23,14 @@ public class DeviceSupplyRecordVO {
 	
 	public void setLocation(String location) {
 		this.location = location;
+	}
+	
+	public String getPhone() {
+		return this.phone;
+	}
+	
+	public void setPhone(String phone) {
+		this.phone = phone;
 	}
 	
 	public Double getPayment() {

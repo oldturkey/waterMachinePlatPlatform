@@ -70,7 +70,7 @@ public class MainPageController {
 		calendar.add(Calendar.HOUR, -1);
 		String beginTime = df.format(calendar.getTime());
 		JSONObject jsonObject = new JSONObject();
-		JSONArray supply = deviceService.getDeviceSupplyRecord(adminPO.getName(), adminPO.getType(), beginTime, endTime);
+		JSONArray supply = deviceService.getDeviceSupplyRecord(adminPO.getName(), adminPO.getType(), null, null, null, beginTime, endTime);
 		jsonObject.put("status", 1);
 		jsonObject.put("record", supply);
 		return jsonObject;
