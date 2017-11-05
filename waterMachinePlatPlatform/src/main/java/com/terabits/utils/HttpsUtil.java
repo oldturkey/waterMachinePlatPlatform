@@ -20,7 +20,6 @@ import org.apache.http.message.BasicNameValuePair;
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManagerFactory;
-
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -50,9 +49,9 @@ public class HttpsUtil extends DefaultHttpClient {
 
     // please replace the SELFCERTPATH/SELFCERTPWD/TRUSTCAPATH according to the actual situation when you use the demo.
 
-    public static String SELFCERTPATH = "./cert/outgoing.CertwithKey.pkcs12";
+    public static String SELFCERTPATH = "/root/workspace/jar-file/cert/outgoing.CertwithKey.pkcs12";
     public static String SELFCERTPWD = "IoM@1234";
-    public static String TRUSTCAPATH = "./cert/ca.jks";
+    public static String TRUSTCAPATH = "/root/workspace/jar-file/cert/ca.jks";
 
 
     // Where the TRUSTCAPWD is not the password for the CA certificate, but the password for the jks certificate repository

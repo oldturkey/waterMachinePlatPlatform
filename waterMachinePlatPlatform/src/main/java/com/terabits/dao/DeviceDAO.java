@@ -59,8 +59,8 @@ public interface DeviceDAO {
 	 * @return
 	 */
 	public List<DeviceSupplyRecordVO> 
-	selectDeviceSupplyRecordByAdmin(@Param("name") String name, @Param("type") int type, @Param("displayid") String displayid, @Param("location") String location, 
-			@Param("phone") String phone, @Param("beginTime") String beginTime, @Param("endTime") String endTime);
+	selectDeviceSupplyRecordByAdmin(@Param("name") String name, @Param("type") int type, @Param("displayid") String displayid, @Param("location") String location,
+                                    @Param("phone") String phone, @Param("beginTime") String beginTime, @Param("endTime") String endTime);
 	
 	/**
 	 * 设备报警记录查询
@@ -94,7 +94,7 @@ public interface DeviceDAO {
 	 * @param params
 	 * @return
 	 */
-	public int addAdminToTerminal(Map<String,Object> params);
+	public int addAdminToTerminal(Map<String, Object> params);
 	
 	/**
 	 * 删除设备

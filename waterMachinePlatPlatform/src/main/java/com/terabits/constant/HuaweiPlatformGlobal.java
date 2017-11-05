@@ -16,4 +16,8 @@ public class HuaweiPlatformGlobal {
 
     public final static String APP_URL = "https://112.17.33.73:8743";
 
+    public static final String DELETE_DEVICE = APP_URL + "/iocm/app/dm/v1.1.0/devices";
+
+    public static final String REGISTER_DEVICE = APP_URL + "/iocm/app/reg/v1.1.0/devices";
+
 }

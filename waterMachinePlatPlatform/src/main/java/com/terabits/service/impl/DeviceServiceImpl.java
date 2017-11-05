@@ -20,7 +20,7 @@ import com.terabits.utils.RequestWebId;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
-@Service
+@Service("deviceService")
 public class DeviceServiceImpl implements DeviceService {
 	
 	@Autowired
@@ -163,6 +163,11 @@ public class DeviceServiceImpl implements DeviceService {
 		List<TerminalPO> terminalPOs = deviceDAO.selectTerminalByAdmin(name, type, displayid);
 		JSONArray jsonArray = JSONArray.fromObject(terminalPOs);
 		return jsonArray;
+	}
+
+	public TerminalPO selectTerminalByDisplayid(String displayId){
+		TerminalPO terminalPO = deviceDAO.selectTerminalByDisplayid(displayId);
+		return terminalPO;
 	}
 
 }

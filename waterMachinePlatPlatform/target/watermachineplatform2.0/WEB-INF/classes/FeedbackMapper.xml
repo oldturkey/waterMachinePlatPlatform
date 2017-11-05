@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.terabits.mapper.FeedbackMapper">
+
+    <!--查询管理平台登录用户名和密码-->
+
+    <!-- 自定义返回结果集 -->
+    <resultMap id="feedbackMapper" type="com.terabits.meta.po.FeedbackPO">
+        <id property="id" column="id" javaType="java.lang.Integer"></id>
+        <result property="nickname" column="nickname" javaType="java.lang.String"></result>
+        <result property="phone" column="phone" javaType="java.lang.String"></result>
+        <result property="email" column="email" javaType="java.lang.String"></result>
+        <result property="feedback" column="feedback" javaType="java.lang.String"></result>
+        <result property="status" column="status" javaType="java.lang.Integer"></result>
+        <result property="gmtSolve" column="gmtsolve" javaType="java.lang.String"></result>
+        <result property="gmtCreate" column="gmtcreate" javaType="java.lang.String"></result>
+    </resultMap>
+
+
+    <!-- 在各种标签中的id属性必须和接口中的方法名相同 ， id属性值必须是唯一的，不能够重复使用。parameterType属性指明查询时使用的参数类型，resultType属性指明查询返回的结果集类型-->
+    <!-- useGeneratedKeys：（ 仅 对 insert 有 用 ） 这 会 告 诉 MyBatis 使 用 JDBC 的getGeneratedKeys
+                方法来取出由数据（比如：像 MySQL 和 SQLServer 这样的数据库管理系统的自动递增字段）内部生成的主键。默认值： false。 -->
+    <!--keyProperty： （仅对 insert有用）标记一个属性， MyBatis 会通过 getGeneratedKeys或者通过 insert 语句的 selectKey 子元素设置它的值。默认：不设置。 -->
+    <!--#{}中的内容，为占位符，当参数为某个JavaBean时，表示放置该Bean对象的属性值  -->
+    <insert id="insertFeedback" useGeneratedKeys="true" parameterType="com.terabits.meta.po.FeedbackPO">
+        INSERT INTO feedback(nickname,phone,email,feedback,status,gmtsolve,gmtcreate) VALUES (#{nickname},#{phone},#{email},#{feedback},#{status},#{gmtSolve},now())
+    </insert>
+
+    <update id="updateFeedbackStatusById" parameterType="java.lang.Integer">
+        UPDATE feedback SET status=#{status},gmtsolve=now() WHERE id=#{id}
+    </update>
+
+
+    <select id="selectFeedbackByPhoneAndTime" resultMap="feedbackMapper">
+        select * from feedback
+        <where>
+            <if test="phone != null and phone != ''">
+                phone=#{phone}
+            </if>
+            <if test="timeSpanBO.beginTime != null and timeSpanBO.beginTime != ''">
+                and gmtcreate >= #{timeSpanBO.beginTime}
+            </if>
+            <if test="timeSpanBO.endTime != null and timeSpanBO.endTime != ''">
+                and gmtcreate &lt;= #{timeSpanBO.endTime}
+            </if>
+        </where>
+        order by gmtcreate desc
+    </select>
+
+    <delete id="deleteFeedbackById" parameterType="java.lang.Integer">
+        DELETE FROM feedback WHERE id=#{id}
+    </delete>
+
+    <delete id="deleteFeedbackByTimeOnlySolved">
+        DELETE FROM feedback
+        <where>
+            status=#{status}
+            <if test="timeSpanBO.beginTime != null and timeSpanBO.beginTime != ''">
+                and gmtcreate >= #{timeSpanBO.beginTime}
+            </if>
+            <if test="timeSpanBO.endTime != null and timeSpanBO.endTime != ''">
+                and gmtcreate &lt;= #{timeSpanBO.endTime}
+            </if>
+        </where>
+    </delete>
+
+
+</mapper>

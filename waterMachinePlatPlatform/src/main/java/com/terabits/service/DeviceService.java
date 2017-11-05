@@ -97,4 +97,11 @@ public interface DeviceService {
 	 * @return
 	 */
 	public JSONArray getDeviceManageInfo(String name, int type, String displayid);
+
+	/**
+	 * 根据设备的displayId获取设备信息
+	 * @param displayId
+	 * @return
+	 */
+	public TerminalPO selectTerminalByDisplayid(String displayId);
 }

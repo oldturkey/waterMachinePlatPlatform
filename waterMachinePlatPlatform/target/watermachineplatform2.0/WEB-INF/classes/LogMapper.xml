@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--Mapper元素只有一个属性namespace，它有两个作用：一是用于区分不同的mapper（在不同的mapper文件里，子元素的id可以相同，mybatis通过namespace和子元素的id联合区分），
+二是与接口关联（应用程序通过接口访问mybatis时，mybatis通过接口的完整名称查找对应的mapper配置，因此namespace的命名务必小心一定要某接口同名）。
+此外，mapper配置文件还有几个顶级子元素（它们须按照顺序定义）-->
+
+<!--与mapper中的接口完全对应-->
+<mapper namespace="com.terabits.mapper.AdminMapper">
+
+    <!--查询管理平台登录用户名和密码-->
+    <resultMap id="logMap" type="com.terabits.meta.po.LogPO">
+        <result property="id" column="id" javaType="java.lang.Integer"></result>
+        <result property="account" column="account" javaType="java.lang.String"></result>
+        <result property="type" column="type" javaType="java.lang.Integer"></result>
+        <result property="text" column="text" javaType="java.lang.String"></result>
+        <result property="result" column="result" javaType="java.lang.Integer"></result>
+        <result property="gmtCreate" column="gmtcreate" javaType="java.lang.String"></result>
+        <result property="gmtModified" column="gmtmodified" javaType="java.lang.String"></result>
+    </resultMap>
+    <!-- 自定义返回结果集 -->
+    <!--ResultMap是数据库返回结果类型与PO的映射，column是数据库中的字段，property是PO的字段，最终resultMap对column和property做一个映射关系（对应关系）-->
+
+    <!-- 在各种标签中的id属性必须和接口中的方法名相同 ， id属性值必须是唯一的，不能够重复使用。parameterType属性指明查询时使用的参数类型，resultType属性指明查询返回的结果集类型-->
+    <!-- useGeneratedKeys：（ 仅 对 insert 有 用 ） 这 会 告 诉 MyBatis 使 用 JDBC 的getGeneratedKeys
+                方法来取出由数据（比如：像 MySQL 和 SQLServer 这样的数据库管理系统的自动递增字段）内部生成的主键。默认值： false。 -->
+    <!--keyProperty： （仅对 insert有用）标记一个属性， MyBatis 会通过 getGeneratedKeys或者通过 insert 语句的 selectKey 子元素设置它的值。默认：不设置。 -->
+    <!--#{}中的内容，为占位符，当参数为某个JavaBean时，表示放置该Bean对象的属性值  -->
+
+
+    <insert id="insertLog" parameterType="com.terabits.meta.po.LogPO">
+        INSERT INTO log(account,type,text,result,gmtcreate,gmtmodified)VALUES (#{account},#{type},#{text},#{result},now(),now())
+    </insert>
+
+    <delete id="deleteLogByTime">
+        DELETE FROM log
+        <where>
+            <if test="timeSpanBO.beginTime != null and timeSpanBO.beginTime != ''">
+                gmtcreate >= #{timeSpanBO.beginTime}
+            </if>
+            <if test="timeSpanBO.endTime != null and timeSpanBO.endTime != ''">
+                and gmtcreate &lt;= #{timeSpanBO.endTime}
+            </if>
+        </where>
+    </delete>
+
+    <select id="selectLogByTypeAndTime" resultMap="logMap">
+        select * from log order by gmtcreate desc
+        <where>
+            <if test="type != null and type != ''">
+                type = #{type}
+            </if>
+            <if test="timeSpanBO.beginTime != null and timeSpanBO.beginTime != ''">
+                and gmtcreate >= #{timeSpanBO.beginTime}
+            </if>
+            <if test="timeSpanBO.endTime != null and timeSpanBO.endTime != ''">
+                and gmtcreate &lt;= #{timeSpanBO.endTime}
+            </if>
+        </where>
+    </select>
+</mapper>
