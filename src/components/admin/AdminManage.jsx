@@ -4,7 +4,7 @@
 import React from 'react';
 import { Row, Col, Card, Icon,Select,Input,Popconfirm,Button,Table } from 'antd';
 import BreadcrumbCustom from '../BreadcrumbCustom';
-import './EditableCell.css';
+import '../device/EditableCell.css';
 const Option = Select.Option;
 const children = [];
 
@@ -17,7 +17,7 @@ class EditableCell extends React.Component {
   }
   handleChange = (e) => {
     this.state.user?
-    this.setState({ value:e.join(",") }):this.setState({ value:e.target.value });
+    this.setState({ value:e }):this.setState({ value:e.target.value });
   }
   check = () => {
     this.setState({ editable: false });
@@ -37,15 +37,16 @@ class EditableCell extends React.Component {
             user?
             <div className="editable-cell-input-wrapper">
               <Select  
-                mode="tags"
                 style={{ width: '100%' }}
                 onChange={this.handleChange}
                 onPressEnter={this.check}
                 tokenSeparators={[',']}
               >
-              <Option value="jack">Jack</Option>
-    <Option value="lucy">Lucy</Option>
-    <Option value="tom">Tom</Option>
+              <Option value="平台管理员">平台管理员</Option>
+              <Option value="平台运营员">平台运营员</Option>
+              <Option value="物业管理员">物业管理员</Option>
+              <Option value="系统调试员">系统调试员</Option>
+              <Option value="物业分级管理员">物业分级管理员</Option>
             </Select>
               <Icon
                 type="check"
@@ -84,19 +85,19 @@ class EditableCell extends React.Component {
 
 
 
-class Dashboard extends React.Component {
+class AdminManage extends React.Component {
     constructor(props) {
     super(props);
     this.state={dataSource: [],
       count: 0,}
     this.columns = [{
-      title: '设备编号',
-      dataIndex: 'displayId',
-      width: '7%',
-      sorter: (a, b) => a.displayId - b.displayId,
+      title: '管理员编号',
+      dataIndex: 'adminId',
+      width: '12%',
+      sorter: (a, b) => a.adminId - b.adminId,
     },{
-      title: '设备地址',
-      dataIndex: 'location',
+      title: '管理员姓名',
+      dataIndex: 'account',
       width: '17%',
       render: (text, record) => {
         if(!record.operation){
@@ -111,16 +112,19 @@ class Dashboard extends React.Component {
         }
       },
     },{
-      title: 'SIM卡号',
-      dataIndex: 'simId',
+      title: '管理设备',
+      dataIndex: 'displayid',
       width: '12%',
-      sorter: (a, b) => a.simId - b.simId,
+    },{
+      title: '邮箱',
+      dataIndex: 'email',
+      width: '16%',
       render: (text, record) => {
         if(!record.operation){
           return (
             <EditableCell
               value={text}
-              onChange={this.onCellChange(record.key, 'simId')}
+              onChange={this.onCellChange(record.key, 'email')}
             />
           )
         }else {
@@ -128,16 +132,16 @@ class Dashboard extends React.Component {
         }
       },
     },{
-      title: 'IMEI号',
-      dataIndex: 'imei',
-      width: '12%',
-      sorter: (a, b) => a.imei - b.imei,
+      title: '管理员类型',
+      dataIndex: 'adminType',
+      width: '16%',
       render: (text, record) => {
         if(!record.operation){
           return (
             <EditableCell
+              user={1}
               value={text}
-              onChange={this.onCellChange(record.key, 'imei')}
+              onChange={this.onCellChange(record.key, 'adminType')}
             />
           )
         }else {
@@ -145,50 +149,17 @@ class Dashboard extends React.Component {
         }
       },
     },{
-      title: '管理员',
-      dataIndex: 'account',
-      width: '12%',
-      render: (text, record) => {
-        if(!record.operation){
-          return (
-            <EditableCell
-                user={1}
-              value={text}
-              onChange={this.onCellChange(record.key, 'account')}
-            />
-          )
-        }else {
-          return text
-        }
-      },
-    }, {
-      title: '注册时间',
-      dataIndex: 'gmtCreate',
-      width: '12%',
-      sorter: (a, b) => Date.parse(a.lastConnectTime) - Date.parse(b.lastConnectTime),
+      title: '初始密码',
+      dataIndex: 'password',
+      width: '16%',
     },{
-      title: '设备状态',
-      dataIndex: 'state',
-      width: '12%',
-      render: (text) => {
-        if (text ===10) {
-          return <div><span style={{color:"#87D068",fontSize: 15,paddingRight: '10px'}}>●</span>在线</div>;
-        }else if (text ===11) {
-          return <div><span style={{color:"#2DB7F5",fontSize: 15,paddingRight: '10px'}}>●</span>使用中</div>;
-        }else if (text ===12) {
-          return <div><span style={{color:"#FF5500",fontSize: 15,paddingRight: '10px'}}>●</span>下单中</div>;
-        }else if (text ===23) {
-          return <div><span style={{color:"#CCC",fontSize: 15,paddingRight: '10px'}}>●</span>离线</div>;
-        }
-      },
-    }, {
       title: '操作',
       dataIndex: 'operation',
       render: (text, record) => {
         if(text === 1){
           return (
             <span>   
-                <Popconfirm title="确定要删除该设备?" onConfirm={() => this.onDelete(record.key)}>
+                <Popconfirm title="确定要删除该管理员?" onConfirm={() => this.onDelete(record.key)}>
                   <a href="">删除 </a>
                 </Popconfirm>
               </span> 
@@ -196,8 +167,8 @@ class Dashboard extends React.Component {
         }else{
           return (
             <span>   
-                <Popconfirm title="确定要更新该设备信息?" onConfirm={() => this.onUpDate(record.key)}>
-                  <a href="">上传更新设备状态</a>
+                <Popconfirm title="确定要更新该管理员信息?" onConfirm={() => this.onUpDate(record.key)}>
+                  <a href="">上传更新管理员信息</a>
                 </Popconfirm>
               </span> 
             )
@@ -303,10 +274,10 @@ class Dashboard extends React.Component {
     const { count, dataSource } = this.state;
     const newData = {
       key: count,
-      imei: '编辑',
-      simId: '编辑',
-      location: '编辑',
-      account:'编辑',
+      account: '编辑',
+      email: '编辑',
+      adminType: '编辑',
+      password:Math.floor(Math.random()*10)+''+Math.floor(Math.random()*10)+Math.floor(Math.random()*10)+Math.floor(Math.random()*10)+Math.floor(Math.random()*10),
     };
     this.setState({
       dataSource: [...dataSource, newData],
@@ -317,14 +288,14 @@ class Dashboard extends React.Component {
     render() {
         return (
             <div className="gutter-example button-demo">
-                <BreadcrumbCustom first="设备管理" second="设备权限管理"/>
+                <BreadcrumbCustom first="账号管理" />
                 <Row>
                     <Col className="gutter-row" md={24}>
                         <div className="gutter-box">
-                            <Card bordered={false} title="设备权限管理" className={'no-padding'}>
+                            <Card bordered={false} title="管理员账号管理" className={'no-padding'}>
                                 <div style={{width:'90%' ,margin:'10px auto'}}>
                                     <Button className="editable-add-btn" style={{float:'right',backgroundColor: '#49a9ee',color:'#fff'}} onClick={this.lodaDataFromServer}>刷新状态</Button>
-                                    <Button className="editable-add-btn"  onClick={this.handleAdd}>添加设备</Button>
+                                    <Button className="editable-add-btn"  onClick={this.handleAdd}>添加管理员</Button>
                                     <Table bordered dataSource={this.state.dataSource} columns={this.columns} />
                                 </div>  
                             </Card>
@@ -336,4 +307,4 @@ class Dashboard extends React.Component {
         )
     }
 }
-export default Dashboard;
+export default AdminManage;

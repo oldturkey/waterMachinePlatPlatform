@@ -125,7 +125,7 @@ class UserInfo extends React.Component {
     const { getFieldDecorator } = this.props.form; 
     const formItemLayout = {
       labelCol: { span: 6 },
-      wrapperCol: { span: 12 },
+      wrapperCol: { span: 16 },
     };
     const { selectedRowKeys } = this.state;
     const rowSelection = {
@@ -244,7 +244,7 @@ class UserInfo extends React.Component {
           style={{padding:'30px 5px',marginBottom:20}}
            >
           <Row>
-            <Col span={12} key={1} >
+            <Col span={7} key={1} offset={2}>
               <FormItem {...formItemLayout} label='用户手机号'>
               {getFieldDecorator('displayId', {
               rules: [{ required: true, message: '请输入要查询的手机号码!' }],
@@ -255,7 +255,7 @@ class UserInfo extends React.Component {
             </Col>
             <Col span={12} key={2}>
               <Button type="primary" htmlType="submit">搜索</Button>
-              <Button style={{ marginLeft: 8 }} onClick={this.handleReset}>
+              <Button  onClick={this.handleReset}>
                 清空
               </Button>
             </Col>
@@ -263,7 +263,7 @@ class UserInfo extends React.Component {
         </Form>
             <Table columns={columns} rowSelection={rowSelection} dataSource={this.state.data} loading={this.state.loading}/>
             <Row style={{padding:'20px 0'}}>
-              <Col span={20} offset={12}>
+              <Col span={18} offset={10}>
                 <Form onSubmit={this.handleSubmit} layout='inline'>
                   <FormItem
                     label="为选中用户充值金额(元)"

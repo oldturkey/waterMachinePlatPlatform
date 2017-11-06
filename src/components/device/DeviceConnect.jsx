@@ -2,6 +2,7 @@
 import React from 'react';
 import { Row, Col ,Table,Form,Input, Button,Card,Icon,DatePicker} from 'antd';
 import BreadcrumbCustom from '../BreadcrumbCustom';
+import styles from '../query/TableList.less';
 const FormItem = Form.Item;
 const RangePicker = DatePicker.RangePicker;
 
@@ -72,37 +73,30 @@ class DeviceConnect extends React.Component {
                         <div className="gutter-box">
                             <Card bordered={false} title="设备连接报警列表" className={'no-padding'}>
                                 <div className="gutter-box">
-                                    <Form
-                                    className="ant-advanced-search-form"
-                                    onSubmit={this.handleSearch}
-                                    style={{padding:'30px 5px',marginBottom:20}}
-                                     >
-                                    <Row>
-                                      <Col span={12} key={1} >
-                                        <FormItem {...formItemLayout} label='设备编号'>
-                                        {getFieldDecorator('displayId', {
-                                        rules: [{ required: true, message: '请输入设备编号!' }],
-                                      })(
-                                        <Input placeholder="请输入设备编号" />
-                                      )}
-                                        </FormItem>
-                                      </Col>
-                                      
-                                      <Col span={12} key={2} >
-                                        <FormItem {...formItemLayout} label={`订单时间`} >
-                                          {getFieldDecorator(`orderTime`)(
+                                    <Form onSubmit={this.handleSearch} layout="inline">
+                                      <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
+                                        <Col md={7} sm={24} offset={2}>
+                                          <FormItem label="设备编号">
+                                            {getFieldDecorator('displayId')(
+                                              <Input placeholder="请输入" />
+                                            )}
+                                          </FormItem>
+                                        </Col>
+                                        <Col md={7} sm={24}>
+                                          <FormItem {...formItemLayout} label={`掉线时间`} >
+                                          {getFieldDecorator(`lastConnectTime`)(
                                              <RangePicker showTime format="YYYY-MM-DD HH:mm:ss" />
                                           )}
-                                        </FormItem>
-                                      </Col>
-                                      <Col span={24} offset={17}>
-                                        <Button type="primary" htmlType="submit">搜索</Button>
-                                        <Button style={{ marginLeft: 8 }} onClick={this.handleReset}>
-                                          清空
-                                        </Button>
-                                      </Col>
-                                    </Row>
-                                  </Form>
+                                          </FormItem>
+                                        </Col>
+                                        <Col md={4} sm={24} style={{marginTop:'20'}}>
+                                          <span className={styles.submitButtons}>
+                                            <Button type="primary" htmlType="submit">查询</Button>
+                                            <Button style={{ marginLeft: 8 }} onClick={this.handleReset}>重置</Button>
+                                          </span>
+                                        </Col>
+                                      </Row>
+                                    </Form>
                                   <Row>
                                     <Col md={20} offset={2}>
                                     <Table columns={flowColumns} dataSource={[]}   bordered />
@@ -120,3 +114,5 @@ class DeviceConnect extends React.Component {
 
 const DevConnect = Form.create()(DeviceConnect);
 export default DevConnect;
+
+ 

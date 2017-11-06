@@ -1,3 +1,5 @@
+import React from 'react';
+import { Row, Col, Card, Icon,Select,Input,Popconfirm,Button,Table } from 'antd';
 //可编辑组件  可完成select选择和文本输入两种场景使用
 class EditableCell extends React.Component {
   state = {

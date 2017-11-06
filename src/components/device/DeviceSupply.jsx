@@ -1,6 +1,7 @@
 import React from 'react';
 import { Row, Col ,Table,Form,Input, Button,Card } from 'antd';
 import BreadcrumbCustom from '../BreadcrumbCustom';
+import styles from '../query/TableList.less';
 const FormItem = Form.Item;
 
 const flowColumns = [{
@@ -52,41 +53,30 @@ class DeviceSupply extends React.Component {
       <BreadcrumbCustom first="设备管理" second="设备供水信息"/>
       	<div className="gutter-box">
             <Card bordered={false} title="设备供水信息查询" className={'no-padding'}>
-	        <Form
-	        className="ant-advanced-search-form"
-	        onSubmit={this.handleSearch}
-	        style={{padding:'30px 5px',marginBottom:20}}
-	         >
-	        <Row>
-	          <Col span={12} key={1} >
-	            <FormItem {...formItemLayout} label='设备编号'>
-	            {getFieldDecorator('displayId', {
-	            rules: [{ required: true, message: '请输入设备编号!' }],
-	          })(
-	            <Input placeholder="请输入设备编号" />
-	          )}
-	            </FormItem>
-	          </Col>
-	          
-	          <Col span={12} key={2} >
-	            <FormItem {...formItemLayout} label='设备地址'>
-	            {getFieldDecorator('location', {
-	            rules: [{ required: true, message: '请输入设备地址!' }],
-	          })(
-	            <Input placeholder="请输入设备地址" />
-	          )}
-	            </FormItem>
-	          </Col>
-	        
-	        
-	          <Col span={24} offset={18}>
-	            <Button type="primary" htmlType="submit">搜索</Button>
-	            <Button style={{ marginLeft: 8 }} onClick={this.handleReset}>
-	              清空
-	            </Button>
-	          </Col>
-	        </Row>
-	      </Form>
+	        <Form onSubmit={this.handleSearch} layout="inline">
+            <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
+              <Col md={7} sm={24} offset={2}>
+                <FormItem label="设备编号">
+                  {getFieldDecorator('displayId')(
+                    <Input placeholder="请输入" />
+                  )}
+                </FormItem>
+              </Col>
+              <Col md={7} sm={24}>
+                <FormItem label="设备地址">
+                  {getFieldDecorator('location')(
+                    <Input placeholder="请输入" />
+                  )}
+                </FormItem>
+              </Col>
+              <Col md={4} sm={24} style={{marginTop:'20'}}>
+                <span className={styles.submitButtons}>
+                  <Button type="primary" htmlType="submit">查询</Button>
+                  <Button style={{ marginLeft: 8 }} onClick={this.handleReset}>重置</Button>
+                </span>
+              </Col>
+            </Row>
+          </Form>
 	      <Row>
 	      	<Col md={20} offset={2}>
 	      	<Table columns={flowColumns} dataSource={[]}   bordered />
