@@ -2,7 +2,7 @@
  * Created by 叶子 on 2017/8/13.
  */
 import React, { Component } from 'react';
-import { Router, Route, hashHistory, IndexRedirect } from 'react-router';
+import { Router, Route, hashHistory, IndexRedirect,IndexRoute  } from 'react-router';
 import App from '../App';
 import Page from '../components/Page';
 import DeviceStatistics from '../components/device/deviceStatistics';
@@ -35,8 +35,9 @@ export default class CRouter extends Component {
         return (
             <Router history={hashHistory}>
                 <Route path={'/'} components={Page}>
-                    <IndexRedirect to="/app/dashboard/index" />
+                    <IndexRedirect to="/login" />
                     <Route path={'app'} component={App}>
+                        <IndexRoute component={Dashboard}/>
                         <Route path={'device'}>
                             <Route path={'statistics'} component={DeviceStatistics} />
                             <Route path={'supply'} component={DeviceSupply} />
@@ -57,7 +58,7 @@ export default class CRouter extends Component {
                         </Route>
                         <Route path={'feedback'} component={FeedBack} />
                         <Route path={'log'} component={Log} />
-                        <Route path={'dashboard/index'} component={Dashboard} />
+                        
                         <Route path="auth">
                             <Route path="basic" component={AuthBasic} />
                             <Route path="routerEnter" component={(props) => this.requireAuth('auth/testPage', <RouterEnter {...props} />)} />

@@ -19,7 +19,7 @@ class Login extends React.Component {
         const { router } = this.props;
         if (nextAuth.data && nextAuth.data.uid) {   // 判断是否登陆
             localStorage.setItem('user', JSON.stringify(nextAuth.data));
-            router.push('/');
+            router.push('/app');
         }
     }
     handleSubmit = (e) => {
@@ -30,6 +30,7 @@ class Login extends React.Component {
                 const { fetchData } = this.props;
                 if (values.userName === 'admin' && values.password === 'admin') fetchData({funcName: 'admin', stateName: 'auth'});
                 if (values.userName === 'guest' && values.password === 'guest') fetchData({funcName: 'guest', stateName: 'auth'});
+                // fetchData({funcName:'login',stateName:'auth',params:[userName:values.userName,password:values.password]});
             }
         });
     };
