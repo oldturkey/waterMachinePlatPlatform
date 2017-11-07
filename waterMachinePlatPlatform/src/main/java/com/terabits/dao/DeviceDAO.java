@@ -112,7 +112,7 @@ public interface DeviceDAO {
 	
 	/**
 	 * 查询设备
-	 * @param displayid
+	 * @param imei
 	 * @return
 	 */
 	public TerminalPO selectTerminalByImei(@Param("imei") String imei);
