@@ -1,12 +1,13 @@
 package com.terabits.service.impl;
 
+import com.terabits.service.DebugService;
 import com.terabits.service.DeviceService;
 import com.terabits.utils.PlatformGlobal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service("debugService")
-public class DebugServiceImpl {
+public class DebugServiceImpl implements DebugService{
 
     @Autowired
     private DeviceService deviceService;
