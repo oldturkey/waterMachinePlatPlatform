@@ -15,7 +15,30 @@ export default class UseWaterTable extends React.Component {
   componentWillUnmount() {
     
   }
+ // constructor(props) {
+ //    super(props);
+ //    this.state={
+ //      data: [],
+ //      loading: false,
+ //    }
+ //  }
 
+ //  componentDidMount() {
+ //   this.start();
+ //    }
+ //    start = () => {
+ //        this.setState({ loading: true });
+ //        homeSupply().then(res => {
+ //          let i = 0;
+ //            this.setState({
+ //                data: [...res.offlineTerminal.map(val => {
+ //                    val.key = ++i;
+ //                    return val;
+ //                })],
+ //                loading: false
+ //            });
+ //        });
+ //    };
 
   render() {
     return (
