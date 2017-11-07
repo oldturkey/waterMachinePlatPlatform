@@ -30,7 +30,7 @@ class Login extends React.Component {
                 const { fetchData } = this.props;
                 if (values.userName === 'admin' && values.password === 'admin') fetchData({funcName: 'admin', stateName: 'auth'});
                 if (values.userName === 'guest' && values.password === 'guest') fetchData({funcName: 'guest', stateName: 'auth'});
-                // fetchData({funcName:'login',stateName:'auth',params:[userName:values.userName,password:values.password]});
+                // fetchData({funcName:'login',stateName:'auth',params:[values.userName,values.password]});
             }
         });
     };
@@ -41,7 +41,7 @@ class Login extends React.Component {
             <div className="login">
                 <div className="login-form" >
                     <div className="login-logo">
-                        <span>智能饮水机管理平台</span>
+                        <span>管理平台</span>
                     </div>
                     <Form onSubmit={this.handleSubmit} style={{maxWidth: '300px'}}>
                         <FormItem>

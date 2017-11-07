@@ -16,6 +16,13 @@ export const get = ({url, msg = '接口异常', headers}) =>
        console.log(err);
        message.warn(msg);
     });
+//项目场景讲header参数固定
+	//const headers = {'Authorization': 'token'};
+    // export const get = ({url, msg = '接口异常', headers = {headers: headers}}) =>
+    // axios.get(url, headers).then(res => res.data).catch(err => {
+    //    console.log(err);
+    //    message.warn(msg);
+    // });
 
 /**
  * 公用post请求

@@ -8,6 +8,18 @@ import HomeTable from './homeTable';
 
 
 class Dashboard extends React.Component {
+    constructor(props) {
+    super(props);
+    this.state={date: []}
+  }
+
+  componentDidMount() {
+    
+  }
+
+  componentWillUnmount() {
+    
+  }
     render() {
         return (
             <div className="gutter-example button-demo">
