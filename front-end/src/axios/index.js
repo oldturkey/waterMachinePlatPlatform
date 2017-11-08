@@ -151,4 +151,11 @@ export const login = (params) => axios.post('/login', {
     console.log(error);
 });
 
+//发送修改密码邮件
+export const passwordFound = (params) =>post({
+ 	url: 'http://192.168.31.14/waterMachinePlatPlatform/password/found/check/name',
+ 	data:{name:params.name,email:params.email},
+ 	headers: {'Authorization': 'token'}
+ });
+
 

@@ -6,6 +6,7 @@ import { Form, Icon, Input, Button, Checkbox } from 'antd';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { fetchData, receiveData } from '@/action';
+import { Link } from 'react-router';
 
 const FormItem = Form.Item;
 
@@ -65,7 +66,7 @@ class Login extends React.Component {
                             })(
                                 <Checkbox>记住我</Checkbox>
                             )}
-                            <a className="login-form-forgot" href="" style={{float: 'right'}}>忘记密码</a>
+                            <Link to={'/forget'} className="login-form-forgot" href="" style={{float: 'right'}}>忘记密码</Link>
                             <Button type="primary" htmlType="submit" className="login-form-button" style={{width: '100%'}}>
                                 登录
                             </Button>

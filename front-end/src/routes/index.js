@@ -18,6 +18,7 @@ import AdminManage from '../components/admin/AdminManage';
 import FeedBack from '../components/feedback/FeedBack';
 import Log from '../components/log/Log';
 import Login from '../components/pages/Login';
+import Forget from '../components/pages/ForgetPassword';
 import Dashboard from '../components/dashboard/Dashboard';
 import NotFound from '../components/pages/NotFound';
 import AuthBasic from '../components/auth/Basic';
@@ -66,7 +67,7 @@ export default class CRouter extends Component {
                             <Route path={'index'} component={Dashboard} /> 
                         </Route>
                     </Route>
-
+                    <Route path={'forget'} components={Forget} />
                     <Route path={'login'} components={Login} />
                     <Route path={'404'} component={NotFound} />
                 </Route>
