@@ -30,7 +30,8 @@
         <mapper resource="FeedbackMapper.xml"/>
         <mapper resource="UserMapper.xml"/>
         <mapper resource="RechargeOrderMapper.xml"/>
-        <mapper resource="PresentMapper.xml" />
+        <mapper resource="PresentMapper.xml"/>
+        <mapper resource="StatisticMapper.xml"/>
     </mappers>
 
 </configuration>

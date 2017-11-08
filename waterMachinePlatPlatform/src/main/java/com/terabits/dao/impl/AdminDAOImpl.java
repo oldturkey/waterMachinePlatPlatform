@@ -3,6 +3,7 @@ package com.terabits.dao.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.terabits.meta.po.AdminRecordPO;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
@@ -82,4 +83,33 @@ public class AdminDAOImpl implements AdminDAO {
         }
 	}
 
+    public int insertAdminRecord(AdminRecordPO adminRecordPO){
+        SqlSession session = DBTools.getSession();
+        AdminMapper adminMapper = session.getMapper(AdminMapper.class);
+        int result=0;
+        try {
+            result=adminMapper.insertAdminRecord(adminRecordPO);
+            session.commit();
+        }catch (Exception e){
+            e.printStackTrace();
+            session.rollback();
+        }finally {
+            session.close();
+        }
+        return result;
+    }
+
+    public List<AdminRecordPO> selectAllAdminRecord(String phone){
+        SqlSession session = DBTools.getSession();
+        AdminMapper adminMapper = session.getMapper(AdminMapper.class);
+        List<AdminRecordPO> adminRecordPOList=new ArrayList<AdminRecordPO>();
+        try {
+            adminRecordPOList=adminMapper.selectAllAdminRecord(phone);
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            session.close();
+        }
+        return adminRecordPOList;
+    }
 }

@@ -3,9 +3,11 @@ package com.terabits.dao.impl;
 import com.terabits.dao.UserDAO;
 import com.terabits.mapper.UserMapper;
 import com.terabits.meta.bo.TimeSpanBO;
+import com.terabits.meta.bo.UserConsumeBO;
 import com.terabits.meta.po.User.ConsumeOrderPO;
 import com.terabits.meta.po.User.RechargeOrderPO;
 import com.terabits.meta.po.User.UserPO;
+import com.terabits.meta.vo.UserConsumeVO;
 import com.terabits.utils.DBTools;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
@@ -197,5 +199,19 @@ public class UserDAOImpl implements UserDAO {
             session.close();
         }
         return sum;
+    }
+
+    public List<UserConsumeVO> selectDynamicConsumeRecord(UserConsumeBO userConsumeBO){
+        SqlSession session = DBTools.getSession();
+        UserMapper userMapper = session.getMapper(UserMapper.class);
+        List<UserConsumeVO> userConsumeVOS = new ArrayList<>();
+        try{
+            userConsumeVOS = userMapper.selectDynamicConsumeRecord(userConsumeBO);
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally{
+            session.close();
+        }
+        return userConsumeVOS;
     }
 }

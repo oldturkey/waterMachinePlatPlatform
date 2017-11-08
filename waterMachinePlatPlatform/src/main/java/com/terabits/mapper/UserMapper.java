@@ -1,9 +1,11 @@
 package com.terabits.mapper;
 
 import com.terabits.meta.bo.TimeSpanBO;
+import com.terabits.meta.bo.UserConsumeBO;
 import com.terabits.meta.po.User.ConsumeOrderPO;
 import com.terabits.meta.po.User.RechargeOrderPO;
 import com.terabits.meta.po.User.UserPO;
+import com.terabits.meta.vo.UserConsumeVO;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
@@ -116,4 +118,15 @@ public interface UserMapper {
      * @throws Exception
      */
     public Double sumFlowByOpenIdAndTime(@Param("openId") String openId, @Param("timeSpanBO") TimeSpanBO timeSpanBO) throws Exception;
+
+    /**
+     * 根据提供的displayid, location, beginTime, endTime, phone查询订单
+     * @param userConsumeBO
+     * @return
+     * @throws Exception
+     */
+    public List<UserConsumeVO> selectDynamicConsumeRecord(UserConsumeBO userConsumeBO) throws Exception;
+
+
+
 }
