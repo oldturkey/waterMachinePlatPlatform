@@ -5,8 +5,10 @@ import java.util.Calendar;
 
 import javax.servlet.http.HttpServletResponse;
 
+import com.terabits.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -27,6 +29,8 @@ public class MainPageController {
 	private AdminService adminService;
 	@Autowired
 	private DeviceService deviceService;
+	@Autowired
+	private UserService userService;
 	
 	@RequestMapping(value = "/home/device/info",method = RequestMethod.GET)
     public @ResponseBody
@@ -103,5 +107,23 @@ public class MainPageController {
 		jsonObject.put("alarm", alarm);
 		return jsonObject;
     }
+
+    @RequestMapping(value = "/home/user/info", method = RequestMethod.GET)
+	public @ResponseBody JSONObject userInfoStatistic(@RequestParam(value = "Authorization") String clientToken) throws Exception{
+		AdminPO adminPO = JWT.unsign(clientToken, AdminPO.class);
+		if (adminPO == null) {
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("status", 0);
+			return jsonObject;
+		}
+		if (!adminService.authConfirm(adminPO.getType(), "/home/device/hour-alarm")) {
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("status", 0);
+			return jsonObject;
+		}
+		JSONObject jsonObject = userService.getHomepageUserInfo();
+		jsonObject.put("status", 1);
+		return jsonObject;
+	}
 	
 }

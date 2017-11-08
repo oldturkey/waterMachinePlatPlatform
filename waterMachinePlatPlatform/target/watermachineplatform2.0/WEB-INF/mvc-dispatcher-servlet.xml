@@ -27,7 +27,6 @@
     <mvc:interceptors>
         <mvc:interceptor>
             <mvc:mapping path="/user/**"/>
-            <mvc:exclude-mapping path="/public/**"/>
             <bean class="com.terabits.interceptor.LoginInterceptor"/>
         </mvc:interceptor>
     </mvc:interceptors>

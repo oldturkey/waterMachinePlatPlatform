@@ -29,6 +29,8 @@
         <mapper resource="LogMapper.xml"/>
         <mapper resource="FeedbackMapper.xml"/>
         <mapper resource="UserMapper.xml"/>
+        <mapper resource="RechargeOrderMapper.xml"/>
+        <mapper resource="PresentMapper.xml" />
     </mappers>
 
 </configuration>
