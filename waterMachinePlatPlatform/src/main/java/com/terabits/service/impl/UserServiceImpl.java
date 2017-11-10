@@ -1,25 +1,32 @@
 package com.terabits.service.impl;
 
 import com.terabits.dao.AdminDAO;
+import com.terabits.dao.LogDAO;
 import com.terabits.dao.PresentDAO;
 import com.terabits.dao.RechargeOrderDAO;
 import com.terabits.dao.StatisticDAO;
 import com.terabits.dao.UserDAO;
+import com.terabits.meta.bo.ConsumeBO;
+import com.terabits.meta.bo.PresentBO;
+import com.terabits.meta.bo.RechargeBO;
 import com.terabits.meta.bo.TimeSpanBO;
 import com.terabits.meta.bo.UserConsumeBO;
 import com.terabits.meta.po.AdminPO;
 import com.terabits.meta.po.AdminRecordPO;
+import com.terabits.meta.po.LogPO;
 import com.terabits.meta.po.Statistic.AuxcalPO;
 import com.terabits.meta.po.Statistic.TotalPO;
 import com.terabits.meta.po.User.RechargeOrderPO;
 import com.terabits.meta.po.User.UserPO;
 import com.terabits.meta.vo.UserConsumeVO;
+import com.terabits.meta.vo.UserVO;
 import com.terabits.service.UserService;
 import com.terabits.utils.JWT;
 import com.terabits.utils.TimeSpanUtil;
 import net.sf.json.JSON;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.apache.commons.collections.ArrayStack;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +36,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service("userService")
 public class UserServiceImpl implements UserService {
@@ -43,6 +52,8 @@ public class UserServiceImpl implements UserService {
     private StatisticDAO statisticDAO;
     @Autowired
     private AdminDAO adminDAO;
+    @Autowired
+    private LogDAO logDAO;
     //获取首页关于用户的统计数据
     public JSONObject getHomepageUserInfo() throws Exception{
 
@@ -128,6 +139,20 @@ public class UserServiceImpl implements UserService {
         result = adminDAO.insertAdminRecord(adminRecordPO);
         if (result == 0)
             flag = 0;
+
+        //*******************插入日志记录********************
+        LogPO logPO = new LogPO();
+        logPO.setAccount(adminName);
+        logPO.setType(4);
+        logPO.setText("为用户" + phoneRecord + "充值" + Double.valueOf(money) + "元");
+        logPO.setResult(66);
+        try {
+            result = logDAO.insertLog(logPO);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        if(result == 0)
+            flag = 0;
         //***********************更新当日present*********************
         int userNo = phoneArray.length;
         Date now = new Date();
@@ -182,5 +207,40 @@ public class UserServiceImpl implements UserService {
             rechargeInfoWithOpenId.getJSONObject(i).put("phone", phone);
         }
         return rechargeInfoWithOpenId;
+    }
+
+    public JSONArray getUserInfo(String phone){
+        String openid = null;
+        List<UserVO> userVOS = userDAO.userInfo(phone);
+        if(phone != null){
+            openid = userVOS.get(0).getOpenid();
+        }
+        List<ConsumeBO> consumeBOS = new ArrayList<>();
+        List<RechargeBO> rechargeBOS = new ArrayList<>();
+        List<PresentBO> presentBOS = new ArrayList<>();
+        Map<String, Integer> map = new HashMap<String, Integer>();
+        Map<String, Integer> mapPhone = new HashMap<String, Integer>();
+        for(int i = 0; i < userVOS.size(); i++){
+            map.put(userVOS.get(i).getOpenid(), i);
+            mapPhone.put(userVOS.get(i).getPhone(), i);
+        }
+        consumeBOS = userDAO.getSumConsume(openid);
+        rechargeBOS = userDAO.getSumRecharge(openid);
+        presentBOS = userDAO.getSumPresent(phone);
+        for(int i = 0; i < consumeBOS.size(); i++){
+            int j = map.get(consumeBOS.get(i).getOpenId());
+            userVOS.get(j).setConsume(consumeBOS.get(i).getConsume());
+        }
+        for(int i = 0; i < rechargeBOS.size(); i++){
+            int j = map.get(rechargeBOS.get(i).getOpenId());
+            userVOS.get(j).setRecharge(rechargeBOS.get(i).getRecharge());
+        }
+        for(int i = 0; i < presentBOS.size(); i++){
+            int j = mapPhone.get(presentBOS.get(i).getPhone());
+            userVOS.get(j).setPresent(presentBOS.get(i).getPresent());
+        }
+        JSONArray jsonArray = JSONArray.fromObject(userVOS);
+        return jsonArray;
+
     }
 }

@@ -1,12 +1,17 @@
 package com.terabits.mapper;
 
+import com.terabits.meta.bo.ConsumeBO;
+import com.terabits.meta.bo.PresentBO;
+import com.terabits.meta.bo.RechargeBO;
 import com.terabits.meta.bo.TimeSpanBO;
 import com.terabits.meta.bo.UserConsumeBO;
 import com.terabits.meta.po.User.ConsumeOrderPO;
 import com.terabits.meta.po.User.RechargeOrderPO;
 import com.terabits.meta.po.User.UserPO;
 import com.terabits.meta.vo.UserConsumeVO;
+import com.terabits.meta.vo.UserVO;
 import org.springframework.data.repository.query.Param;
+import org.springframework.security.access.method.P;
 
 import java.util.List;
 
@@ -127,6 +132,18 @@ public interface UserMapper {
      */
     public List<UserConsumeVO> selectDynamicConsumeRecord(UserConsumeBO userConsumeBO) throws Exception;
 
+    /**
+     * 返回用户信息，新接口
+     * @param userPhone
+     * @return
+     * @throws Exception
+     */
+    List<UserVO> userInfo(@Param("userPhone") String userPhone) throws Exception;
 
+    List<ConsumeBO> sumPersonalConsume(@Param("openId") String openId) throws Exception;
+
+    List<RechargeBO> sumPersonalRecharge(@Param("openId") String openId) throws Exception;
+
+    List<PresentBO> selectPersonalPresent(@Param("phone") String phone) throws Exception;
 
 }

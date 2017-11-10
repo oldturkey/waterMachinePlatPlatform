@@ -2,14 +2,20 @@ package com.terabits.dao.impl;
 
 import com.terabits.dao.UserDAO;
 import com.terabits.mapper.UserMapper;
+import com.terabits.meta.bo.ConsumeBO;
+import com.terabits.meta.bo.PresentBO;
+import com.terabits.meta.bo.RechargeBO;
 import com.terabits.meta.bo.TimeSpanBO;
 import com.terabits.meta.bo.UserConsumeBO;
 import com.terabits.meta.po.User.ConsumeOrderPO;
 import com.terabits.meta.po.User.RechargeOrderPO;
 import com.terabits.meta.po.User.UserPO;
 import com.terabits.meta.vo.UserConsumeVO;
+import com.terabits.meta.vo.UserVO;
 import com.terabits.utils.DBTools;
+import jdk.nashorn.internal.runtime.regexp.joni.constants.OPCode;
 import org.apache.ibatis.session.SqlSession;
+import org.springframework.jdbc.core.metadata.SqlServerCallMetaDataProvider;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -214,4 +220,61 @@ public class UserDAOImpl implements UserDAO {
         }
         return userConsumeVOS;
     }
+
+    public List<UserVO> userInfo(String phone){
+        SqlSession session = DBTools.getSession();
+        UserMapper userMapper = session.getMapper(UserMapper.class);
+        List<UserVO> userVOS = new ArrayList<>();
+        try{
+            userVOS = userMapper.userInfo(phone);
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            session.close();
+        }
+        return userVOS;
+    }
+
+    public List<ConsumeBO> getSumConsume(String openId){
+        SqlSession session = DBTools.getSession();
+        UserMapper userMapper = session.getMapper(UserMapper.class);
+        List<ConsumeBO> consumeBOS = new ArrayList<>();
+        try{
+            consumeBOS = userMapper.sumPersonalConsume(openId);
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            session.close();
+        }
+        return consumeBOS;
+    }
+
+    public List<RechargeBO> getSumRecharge(String openId){
+        SqlSession session = DBTools.getSession();
+        UserMapper userMapper = session.getMapper(UserMapper.class);
+        List<RechargeBO> rechargeBOS = new ArrayList<>();
+        try{
+            rechargeBOS = userMapper.sumPersonalRecharge(openId);
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            session.close();
+        }
+        return rechargeBOS;
+    }
+
+    public List<PresentBO> getSumPresent(String phone){
+        SqlSession session = DBTools.getSession();
+        UserMapper userMapper = session.getMapper(UserMapper.class);
+        List<PresentBO> presentBOS = new ArrayList<>();
+        try{
+            presentBOS = userMapper.selectPersonalPresent(phone);
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            session.close();
+        }
+        return presentBOS;
+    }
+
 }

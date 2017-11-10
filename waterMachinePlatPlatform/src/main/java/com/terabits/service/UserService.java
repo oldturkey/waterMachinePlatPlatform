@@ -23,4 +23,7 @@ public interface UserService {
 
     //根据给定条件查询用户充值数据
     public JSONArray selectDynamicRechargeRecord(String openId, TimeSpanBO timeSpanBO);
+
+    //查询用户信息
+    public JSONArray getUserInfo(String phone);
 }

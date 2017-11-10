@@ -36,7 +36,7 @@ public class UserController {
     添加管理员操作记录
     更新今天的present
     更新历史recharge*/
-    @RequestMapping(value = "/user/info/provide", method = RequestMethod.POST)
+    @RequestMapping(value = "/user/info/recharge", method = RequestMethod.POST)
     public @ResponseBody
     JSONObject rechargePerson(@RequestParam(value = "Authorization") String token,
                               @RequestParam(value = "money") double money,
@@ -48,14 +48,31 @@ public class UserController {
 
     @RequestMapping(value = "/user/info/provide", method = RequestMethod.GET)
     public @ResponseBody
-    JSONArray adminRechargeRecord(HttpServletRequest request) throws Exception{
+    JSONObject adminRechargeRecord(HttpServletRequest request) throws Exception{
         String phone = null;
         if(request.getParameter("phone") != null){
             phone = request.getParameter("phone");
         }
-        return userService.adminRechargeRecord(phone);
+        JSONArray jsonArray = userService.adminRechargeRecord(phone);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("status", 1);
+        jsonObject.put("info", jsonArray);
+        return jsonObject;
     }
 
+    @RequestMapping(value = "/user/info", method = RequestMethod.GET)
+    public @ResponseBody
+    JSONObject getUserInfo(HttpServletRequest request) throws Exception{
+        String phone = null;
+        if(request.getParameter("phone") != null){
+            phone = request.getParameter("phone");
+        }
+        JSONArray jsonArray = userService.getUserInfo(phone);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("status", 1);
+        jsonObject.put("info", jsonArray);
+        return jsonObject;
+    }
 
     @RequestMapping(value = "/query/payment", method = RequestMethod.GET)
     public @ResponseBody

@@ -5,7 +5,7 @@
 此外，mapper配置文件还有几个顶级子元素（它们须按照顺序定义）-->
 
 <!--与mapper中的接口完全对应-->
-<mapper namespace="com.terabits.mapper.AdminMapper">
+<mapper namespace="com.terabits.mapper.LogMapper">
 
     <!--查询管理平台登录用户名和密码-->
     <resultMap id="logMap" type="com.terabits.meta.po.LogPO">

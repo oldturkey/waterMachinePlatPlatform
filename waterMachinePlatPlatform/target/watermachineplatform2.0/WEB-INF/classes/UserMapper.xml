@@ -49,6 +49,33 @@
         <result property="payment" column="payment" javaType="java.lang.Double"></result>
     </resultMap>
 
+    <resultMap id="userInfoMap" type="com.terabits.meta.vo.UserVO">
+        <result property="phone" column="phone" javaType="java.lang.String"></result>
+        <result property="openid" column="openid" javaType="java.lang.String"></result>
+        <result property="nickname" column="nickname" javaType="java.lang.String"></result>
+        <result property="sex" column="sex" javaType="java.lang.Integer"></result>
+        <result property="location" column="location" javaType="java.lang.String"></result>
+        <result property="time" column="time" javaType="java.lang.String"></result>
+        <result property="remain" column="remain" javaType="java.lang.Double"></result>
+        <result property="consume" column="consume" javaType="java.lang.Double"></result>
+        <result property="recharge" column="recharge" javaType="java.lang.Double"></result>
+        <result property="present" column="present" javaType="java.lang.Double"></result>
+    </resultMap>
+    
+    <resultMap id="sumConsumeMap" type="com.terabits.meta.bo.ConsumeBO">
+        <result property="openId" column="openid" javaType="java.lang.String"></result>
+        <result property="consume" column="consume" javaType="java.lang.Double"></result>
+    </resultMap>
+
+    <resultMap id="sumRechargeMap" type="com.terabits.meta.bo.RechargeBO">
+        <result property="openId" column="openid" javaType="java.lang.String"></result>
+        <result property="recharge" column="recharge" javaType="java.lang.Double"></result>
+    </resultMap>
+
+    <resultMap id="sumPresentMap" type="com.terabits.meta.bo.PresentBO">
+        <result property="phone" column="phone" javaType="java.lang.String"></result>
+        <result property="present" column="present" javaType="java.lang.Double"></result>
+    </resultMap>
     <select id="selectConsumeOrderByDisplayId" parameterType="java.lang.String" resultMap="consumeOrderMap">
         SELECT * FROM consumeorder WHERE displayid=#{displayId} and state=66
     </select>
@@ -158,22 +185,70 @@
         consumeorder.payment as payment, consumeorder.gmtcreate as gmtcreate from consumeorder, terminal, user
         <where>
             consumeorder.displayid=terminal.displayid and consumeorder.openid=user.openid
-            <if test="location!=null">
+            <if test="location != null and location != ''">
                 and terminal.location like '%${location}%'
             </if>
-            <if test="displayid!=null">
+            <if test="displayid != null and displayid != ''">
                 and consumeorder.displayid = #{displayid}
             </if>
-            <if test="phone!=null">
+            <if test="phone != null and phone != ''">
                 and user.phone = #{phone}
             </if>
-            <if test="beginTime!=null">
+            <if test="beginTime != null and beginTime != ''">
                 and consumeorder.gmtcreate >= #{beginTime}
             </if>
-            <if test="endTime!=null">
+            <if test="endTime != null and endTime != ''">
                 and consumeorder.gmtcreate &lt; #{endTime}
             </if>
         </where>
     </select>
+
+    <select id = "userInfo" parameterType="String" resultMap="userInfoMap">
+        select phone as phone, openid as openid, nickname as nickname, sex as sex, city as location, gmtcreate as time,
+        recharge + present as remain from user
+        <where>
+            <if test="_parameter != null and _parameter != ''">
+                phone = #{userPhone}
+            </if>
+            <if test="_parameter == null">
+                phone is not null
+            </if>
+        </where>
+    </select>
+
+    <select id = "sumPersonalConsume" parameterType="String" resultMap="sumConsumeMap">
+        select u.openid as openid, SUM(s.payment) as consume from user u, consumeorder s
+        <where>
+            s.openid = u.openid
+            <if test="_parameter != null and _parameter != ''">
+                u.openid = #{openId}
+            </if>
+        </where>
+        GROUP BY u.openid
+    </select>
+
+    <select id = "sumPersonalRecharge" parameterType="String" resultMap="sumRechargeMap">
+        select u.openid as openid, SUM(r.payment) as recharge from user u, rechargerecord r
+        <where>
+            r.openid = u.openid
+            <if test="_parameter != null and _parameter != ''">
+                u.openid = #{openId}
+            </if>
+        </where>
+        GROUP BY u.openid
+    </select>
+
+    <select id = "selectPersonalPresent" parameterType="String" resultMap="sumPresentMap">
+        select u.phone as phone, SUM(p.money) as present from user u, present p
+        <where>
+            p.phone = u.phone
+            <if test="_parameter != null and _parameter != ''">
+                u.phone = #{phone}
+            </if>
+        </where>
+        GROUP BY u.phone
+    </select>
+
+
 
 </mapper>

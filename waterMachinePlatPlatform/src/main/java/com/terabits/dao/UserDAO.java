@@ -1,11 +1,15 @@
 package com.terabits.dao;
 
+import com.terabits.meta.bo.ConsumeBO;
+import com.terabits.meta.bo.PresentBO;
+import com.terabits.meta.bo.RechargeBO;
 import com.terabits.meta.bo.TimeSpanBO;
 import com.terabits.meta.bo.UserConsumeBO;
 import com.terabits.meta.po.User.ConsumeOrderPO;
 import com.terabits.meta.po.User.RechargeOrderPO;
 import com.terabits.meta.po.User.UserPO;
 import com.terabits.meta.vo.UserConsumeVO;
+import com.terabits.meta.vo.UserVO;
 
 import java.util.List;
 
@@ -45,5 +49,13 @@ public interface UserDAO {
     public Double sumFlowByOpenIdAndTime(String openId, TimeSpanBO timeSpanBO);
 
     public List<UserConsumeVO> selectDynamicConsumeRecord(UserConsumeBO userConsumeBO);
+
+    public List<UserVO> userInfo(String phone);
+
+    public List<ConsumeBO> getSumConsume(String openId);
+
+    public List<RechargeBO> getSumRecharge(String openId);
+
+    public List<PresentBO> getSumPresent(String phone);
 
 }
