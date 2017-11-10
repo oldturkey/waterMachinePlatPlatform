@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import com.terabits.dao.AdminDAO;
 import com.terabits.mapper.AdminMapper;
 import com.terabits.meta.po.AdminPO;
+import com.terabits.meta.po.TerminalAdminPO;
 import com.terabits.meta.vo.AuthorityVO;
 import com.terabits.utils.DBTools;
 
@@ -82,4 +83,84 @@ public class AdminDAOImpl implements AdminDAO {
         }
 	}
 
+	
+	public int updateByAdmin(AdminPO adminPO){
+		SqlSession session = DBTools.getSession();
+		AdminMapper mapper = session.getMapper(AdminMapper.class);
+		int result=0;
+		try {
+			result= mapper.updateByAdmin(adminPO);
+			session.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			session.rollback();
+			// TODO: handle exception
+		}finally {
+			session.close();
+		}
+		return result;
+	}
+	
+	public List<AdminPO> selectAllAdminPO(){
+		SqlSession session = DBTools.getSession();
+		AdminMapper mapper = session.getMapper(AdminMapper.class);
+		List<AdminPO> adminPOs = null;
+		try{
+			adminPOs=mapper.selectAllAdminPO();
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally {
+			session.close();
+		}
+		return adminPOs;
+	}
+	
+	public List<String> selectDisplayidByName(String name){
+		SqlSession session = DBTools.getSession();
+		AdminMapper mapper = session.getMapper(AdminMapper.class);
+		List<String> strings=null;
+		try {
+			strings=mapper.selectDisplayidByName(name);
+		} catch (Exception e) {
+			e.printStackTrace();
+			// TODO: handle exception
+		}finally{
+			session.close();
+		}
+		return strings;
+	}
+	
+	public int insertAdminPO(AdminPO adminPO){
+		SqlSession session = DBTools.getSession();
+		AdminMapper mapper = session.getMapper(AdminMapper.class);
+		int result=0;
+		try {
+			result=mapper.insertAdminPO(adminPO);
+			session.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			session.rollback();
+			// TODO: handle exception
+		}finally {
+			session.close();
+		}
+		return result;
+	}
+	
+	public int insertTerminalAdmin(TerminalAdminPO terminalAdminPO){
+		SqlSession session = DBTools.getSession();
+		AdminMapper mapper = session.getMapper(AdminMapper.class);
+		int result=0;
+		try {
+			result=mapper.insertTerminalAdmin(terminalAdminPO);
+			session.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			session.rollback();
+			// TODO: handle exception
+		}finally {
+			session.close();
+		}
+		return result;
+	}
 }
