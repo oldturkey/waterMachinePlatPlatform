@@ -1,169 +1,158 @@
 package com.terabits.controller;
 
-import java.util.Properties;
-
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
-import javax.mail.search.StringTerm;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
+import com.terabits.constant.Constant;
+import com.terabits.dao.AdminDAO;
+import com.terabits.meta.po.AdminPO;
+import com.terabits.utils.JWT;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
 
-import com.terabits.constant.Constant;
-import com.terabits.dao.AdminDAO;
-import com.terabits.meta.po.AdminPO;
 import com.terabits.service.AdminService;
-import com.terabits.utils.JWT;
 
 import net.sf.json.JSONObject;
-import net.sf.json.processors.JsDateJsonBeanProcessor;
+
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.util.Properties;
 
 @Controller
-//@RestController=@Controller+@ResponseBody
 public class LoginController {
-	
-	@Autowired
-	private AdminService adminService;
-	@Autowired
-	private AdminDAO adminDAO;
 
-	//********************************µÇÂ¼******************************************************
-	//@RequestMapping(value="/login",method=RequestMethod.POST) Á½ÖÖ·½Ê½ÊµÏÖ
-	//@GetMapping(value="/login") get¶ÔÓ¦µÄÇëÇó
-	@PostMapping(value = "/login")
-	@ResponseBody//±íÊ¾·µ»ØÀàÐÍ£¬Èç¹û²»ÓÃ£¬return JSONObject½«ÎÞ·¨Ö´ÐÐ
-    public JSONObject login(@RequestParam(value = "name") String name,
-                     @RequestParam(value = "password") String password) throws Exception{
-		System.out.print("********************");
-		System.out.println(name+"    "+password);
+    @Autowired
+    private AdminService adminService;
+    @Autowired
+    private AdminDAO adminDAO;
+
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    public @ResponseBody
+    JSONObject login(@RequestParam(value = "name") String name,
+                     @RequestParam(value = "password") String password) throws Exception {
         return adminService.login(name, password);
     }
-	
-	
-	//*************************************************************************************
-	/********
-	 * ÑéÖ¤ÓÃ»§ÃûºÍÓÊÏäÊÇ·ñÆ¥Åä,Èç¹ûÆ¥Åä£¬ÏòÓÃ»§·¢ËÍÓÊ¼þ¡£ÓÊ¼þÖÐÓÐÒ»¸ö³¬Á´½Ó£¬Ö¸Ïò¡°ÐÞ¸ÄÃÜÂë¡±Ò³Ãæ
-	 * ÔÚÐÞ¸ÄÃÜÂëÒ³Ãæ£¬Ê×ÏÈÅÐ¶ÏÁ´½ÓÊÇ·ñÓÐÐ§¡£µ±Á´½Ó±»µã¹ý£¬»òÕß³¬¹ý30·ÖÖÓ¼´Ê§Ð§£¬ÓÃsessionÀ´ÊµÏÖÉÏÊö¹ý³Ì
-	 * @param name
-	 * @param email
-	 */
-	@RequestMapping(value="/password/found/check/name",method=RequestMethod.POST)
-	public @ResponseBody JSONObject checkNameAndEmail(@RequestParam(value="name") String name,
-													  @RequestParam(value="email") String email,
-													  HttpServletRequest request,
-													  HttpServletResponse response
-													  )throws Exception{
-		//int status= adminService.checkEmailAndName(name, email);
-		AdminPO adminPO=adminDAO.selectAdmin(name);
-		int status;
-		if(adminPO==null){
-			status=0;
-		}else {
-			String tmpEmail=adminPO.getEmail();
-			System.out.println(tmpEmail+"   "+email);
-			if(tmpEmail.equals(email))
-				status=1;
-			else
-				status=2;
-		}
-		//************************·¢ÓÊ¼þ**********************************
-		if(status==1){
-			HttpSession session = request.getSession(); 
-			session.setAttribute("status", "on");
-			sendMail(email,adminPO);
-		}
-		JSONObject jsonObject=new JSONObject();
-		jsonObject.put("status", status);
-		return jsonObject;
-	}
-	
-	//**********************·¢ËÍÓÊ¼þ****************************************************************
-	void sendMail(String email,AdminPO adminPO){
-		JavaMailSenderImpl sender = new JavaMailSenderImpl();
 
-		//**********************ÉèÖÃ»ù±¾²ÎÊý**************************
+    //*************************************************************************************
+
+    /********
+     * ï¿½ï¿½Ö¤ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½Æ¥ï¿½ï¿½,ï¿½ï¿½ï¿½Æ¥ï¿½ä£¬ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó£ï¿½Ö¸ï¿½ï¿½ï¿½Þ¸ï¿½ï¿½ï¿½ï¿½ë¡±Ò³ï¿½ï¿½
+     * ï¿½ï¿½ï¿½Þ¸ï¿½ï¿½ï¿½ï¿½ï¿½Ò³ï¿½æ£¬ï¿½ï¿½ï¿½ï¿½ï¿½Ð¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ï¿½ï¿½Ð§ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ß³ï¿½ï¿½ï¿½30ï¿½ï¿½ï¿½Ó¼ï¿½Ê§Ð§ï¿½ï¿½ï¿½ï¿½sessionï¿½ï¿½Êµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+     * @param name
+     * @param email
+     */
+    @RequestMapping(value = "/password/found/check/name", method = RequestMethod.POST)
+    public @ResponseBody
+    JSONObject checkNameAndEmail(@RequestParam(value = "name") String name,
+                                 @RequestParam(value = "email") String email,
+                                 HttpServletRequest request,
+                                 HttpServletResponse response
+    ) throws Exception {
+        //int status= adminService.checkEmailAndName(name, email);
+        AdminPO adminPO = adminDAO.selectAdmin(name);
+        int status;
+        if (adminPO == null) {
+            status = 0;
+        } else {
+            String tmpEmail = adminPO.getEmail();
+            System.out.println(tmpEmail + "   " + email);
+            if (tmpEmail.equals(email))
+                status = 1;
+            else
+                status = 2;
+        }
+        //************************ï¿½ï¿½ï¿½Ê¼ï¿½**********************************
+        if (status == 1) {
+            HttpSession session = request.getSession();
+            session.setAttribute("status", "on");
+            sendMail(email, adminPO);
+        }
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("status", status);
+        return jsonObject;
+    }
+
+    //**********************ï¿½ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½****************************************************************
+    void sendMail(String email, AdminPO adminPO) {
+        JavaMailSenderImpl sender = new JavaMailSenderImpl();
+
+        //**********************ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½**************************
         sender.setHost("smtp.exmail.qq.com");
         sender.setPort(465);
         sender.setUsername("support@terabits.cn");
-        sender.setPassword("Tb12345678"); // ÕâÀïÒªÓÃÑûÇëÂë£¬²»ÊÇÄãµÇÂ¼ÓÊÏäµÄÃÜÂë
-        Properties pro = System.getProperties(); // ÏÂÃæ¸÷ÏîÈ±Ò»²»¿É
+        sender.setPassword("Tb12345678"); // ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ë£¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        Properties pro = System.getProperties(); // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È±Ò»ï¿½ï¿½ï¿½ï¿½
         pro.put("mail.smtp.auth", "true");
         pro.put("mail.smtp.ssl.enable", "true");
         pro.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
         sender.setJavaMailProperties(pro);
 
-        
+
         MimeMessage message = sender.createMimeMessage();
         try {
-        	//**********************ÉèÖÃ·¢ËÍÓÊ¼þµÄÄÚÈÝ***************
-        	/********
-        	 * "µãÎÒÖØÐÂÉèÖÃÃÜÂë"ÊÇÒ»¸ö³¬Á´½Ó£¬Ö¸ÏòÐÞ¸ÄÃÜÂëÒ³Ãæ¡£Ò³ÃæµÄURLÒ²ÊÇ´Ë´ÎÉè¼ÆµÄÒ»¸öÄÑµã*
-        	 */
+            //**********************ï¿½ï¿½ï¿½Ã·ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½***************
+            /********
+             * "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½"ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó£ï¿½Ö¸ï¿½ï¿½ï¿½Þ¸ï¿½ï¿½ï¿½ï¿½ï¿½Ò³ï¿½æ¡£Ò³ï¿½ï¿½ï¿½URLÒ²ï¿½Ç´Ë´ï¿½ï¿½ï¿½Æµï¿½Ò»ï¿½ï¿½ï¿½Ñµï¿½*
+             */
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-            helper.setFrom("support@terabits.cn"); // ·¢ËÍÈË 
-            helper.setTo(email); // ÊÕ¼þÈË  
-            helper.setSubject("ÖÇ»ÛÎïÁªÒûË®Æ½Ì¨ÃÜÂëÕÒ»Ø"); // ±êÌâ
-            
-            
-            String token = JWT.sign(adminPO, 48 * 1800L * 1000L); 
-            String resetPassHref = Constant.BasePath+"token="+token;
-		    String emailContent = "ÇëÎð»Ø¸´±¾ÓÊ¼þ.µã»÷ÏÂÃæµÄÁ´½Ó,ÖØÉèÃÜÂë<br/><a href="+resetPassHref +" target='_BLANK'>µã»÷ÎÒÖØÐÂÉèÖÃÃÜÂë</a>" +
-		          "<br/>tips:±¾ÓÊ¼þ³¬¹ý30·ÖÖÓ,Á´½Ó½«»áÊ§Ð§£¬ÐèÒªÖØÐÂÉêÇë'ÕÒ»ØÃÜÂë'";
-		    System.out.println(resetPassHref);
-		    System.out.println("  ");
-		    System.out.println(emailContent);
-		    
-	        helper.setText(emailContent,true);
+            helper.setFrom("support@terabits.cn"); // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+            helper.setTo(email); // ï¿½Õ¼ï¿½ï¿½ï¿½
+            helper.setSubject("ï¿½Ç»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë®Æ½Ì¨ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½"); // ï¿½ï¿½ï¿½ï¿½
+
+
+            String token = JWT.sign(adminPO, 48 * 1800L * 1000L);
+            String resetPassHref = Constant.BasePath + "token=" + token;
+            String emailContent = "ï¿½ï¿½ï¿½ï¿½Ø¸ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½.ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½<br/><a href=" + resetPassHref + " target='_BLANK'>ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</a>" +
+                    "<br/>tips:ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½30ï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½ï¿½Ó½ï¿½ï¿½ï¿½Ê§Ð§ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½'ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½'";
+            System.out.println(resetPassHref);
+            System.out.println("  ");
+            System.out.println(emailContent);
+
+            helper.setText(emailContent, true);
             sender.send(message);
-            System.out.println("·¢ËÍÍê±Ï£¡");
+            System.out.println("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï£ï¿½");
         } catch (MessagingException e) {
             e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
-		
-	}
-	
-	@RequestMapping(value="/password/found/check/time",method=RequestMethod.POST)
-	public @ResponseBody JSONObject checkTime(HttpServletRequest request)throws Exception{
-		int state;
-		HttpSession session = request.getSession(); 
-		if(session.getAttribute("status")==null)
-			state=0;
-		else
-			state=1;
-		
-		JSONObject jsonObject=new JSONObject();
-		jsonObject.put("status", state);
-		return jsonObject;
-	}
-	
-	@RequestMapping(value="/password/found/newpass",method=RequestMethod.POST)
-	public @ResponseBody JSONObject newPass(@RequestParam("token") String token,
-											@RequestParam("password") String password,
-											HttpServletRequest request)throws Exception{
-		AdminPO adminPO = JWT.unsign(token, AdminPO.class);
-		adminPO.setPassword(password);
-		int result=adminDAO.updateByAdmin(adminPO);
-		
-		HttpSession session = request.getSession(); 
-		session.removeAttribute("status"); 
-		JSONObject jsonObject=new JSONObject();
-		jsonObject.put("status", result);
-		return jsonObject;
-	}
+
+    }
+
+    @RequestMapping(value = "/password/found/check/time", method = RequestMethod.POST)
+    public @ResponseBody
+    JSONObject checkTime(HttpServletRequest request) throws Exception {
+        int state;
+        HttpSession session = request.getSession();
+        if (session.getAttribute("status") == null)
+            state = 0;
+        else
+            state = 1;
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("status", state);
+        return jsonObject;
+    }
+
+    @RequestMapping(value = "/password/found/newpass", method = RequestMethod.POST)
+    public @ResponseBody
+    JSONObject newPass(@RequestParam("token") String token,
+                       @RequestParam("password") String password,
+                       HttpServletRequest request) throws Exception {
+        AdminPO adminPO = JWT.unsign(token, AdminPO.class);
+        adminPO.setPassword(password);
+        int result = adminDAO.updateByAdmin(adminPO);
+
+        HttpSession session = request.getSession();
+        session.removeAttribute("status");
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("status", result);
+        return jsonObject;
+    }
 }

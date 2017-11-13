@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--Mapper元素只有一个属性namespace，它有两个作用：一是用于区分不同的mapper（在不同的mapper文件里，子元素的id可以相同，mybatis通过namespace和子元素的id联合区分），
+二是与接口关联（应用程序通过接口访问mybatis时，mybatis通过接口的完整名称查找对应的mapper配置，因此namespace的命名务必小心一定要某接口同名）。
+此外，mapper配置文件还有几个顶级子元素（它们须按照顺序定义）-->
+
+<!--与mapper中的接口完全对应-->
+<mapper namespace="com.terabits.mapper.DeviceMapper">
+
+    <resultMap id="deviceSupplyRecordMap" type="com.terabits.meta.vo.DeviceSupplyRecordVO">
+        <result property="displayid" column="displayid" javaType="java.lang.String"></result>
+        <result property="location" column="location" javaType="java.lang.String"></result>
+        <result property="phone" column="phone" javaType="java.lang.String"></result>
+        <result property="payment" column="payment" javaType="java.lang.Double"></result>
+        <result property="flow" column="flow" javaType="java.lang.Double"></result>
+        <result property="time" column="time" javaType="java.lang.String"></result>
+    </resultMap>
+    
+    <resultMap id="deviceOfflineAlarmMap" type="com.terabits.meta.vo.DeviceOfflineAlarmVO">
+        <result property="displayid" column="displayid" javaType="java.lang.String"></result>
+        <result property="location" column="location" javaType="java.lang.String"></result>
+        <result property="simId" column="simid" javaType="java.lang.String"></result>
+        <result property="imei" column="imei" javaType="java.lang.String"></result>
+        <result property="lastConnectTime" column="lastConnectTime" javaType="java.lang.String"></result>
+        <result property="offlineTime" column="offlineTime" javaType="java.lang.Integer"></result>
+    </resultMap>
+    
+    <resultMap id="deviceSupplyInfoMap" type="com.terabits.meta.vo.DeviceSupplyInfoVO">
+        <result property="displayid" column="displayid" javaType="java.lang.String"></result>
+        <result property="location" column="location" javaType="java.lang.String"></result>
+        <result property="time" column="time" javaType="java.lang.String"></result>
+        <result property="dailyFlow" column="dailyFlow" javaType="java.lang.Double"></result>
+        <result property="dailyIncome" column="dailyIncome" javaType="java.lang.Double"></result>
+        <result property="monthFlow" column="monthFlow" javaType="java.lang.Double"></result>
+        <result property="monthIncome" column="monthIncome" javaType="java.lang.Double"></result>
+    </resultMap>
+    
+    <resultMap id="terminalMap" type="com.terabits.meta.po.TerminalPO">
+        <result property="imei" column="imei" javaType="java.lang.String"></result>
+        <result property="deviceid" column="deviceid" javaType="java.lang.String"></result>
+        <result property="displayid" column="displayid" javaType="java.lang.String"></result>
+        <result property="webid" column="webid" javaType="java.lang.String"></result>
+        <result property="state" column="state" javaType="java.lang.Integer"></result>
+        <result property="strength" column="strength" javaType="java.lang.Double"></result>
+        <result property="location" column="location" javaType="java.lang.String"></result>
+        <result property="simid" column="simid" javaType="java.lang.String"></result>
+        <result property="simremain" column="simremain" javaType="java.lang.Double"></result>
+        <result property="registerTime" column="gmtcreate" javaType="java.lang.String"></result>
+    </resultMap>
+
+    <select id="selectDisplayIdByAdmin" resultType="java.lang.String">
+        select displayid from 
+        <choose>
+        	<when test="type==1 || type==2 || type==3 || type==4">
+				terminal
+			</when>
+			<otherwise>
+				terminal_admin where admin_name=#{name}
+			</otherwise>
+        </choose>
+    </select>
+    
+    <select id="selectDeviceNumberByAdmin" resultType="java.lang.Integer">
+    	select count(*) from 
+        <choose>
+        	<when test="type==1 || type==2 || type==3 || type==4">
+				terminal
+			</when>
+			<otherwise>
+				terminal_admin where admin_name=#{name}
+			</otherwise>
+        </choose>
+    </select>
+    
+    <select id="selectTotalSupplyByAdmin" resultType="java.lang.Double">
+    	select sum(consumeorder.flow) from 
+        <choose>
+        	<when test="type==1 || type==2 || type==3 || type==4">
+				consumeorder 
+				<where>
+					<if test="beginTime!=null">
+						and gmtcreate >= #{beginTime}
+					</if>
+					<if test="endTime!=null">
+						and gmtcreate &lt; #{endTime}
+					</if>
+				</where>
+			</when>
+			<otherwise>
+				consumeorder, terminal_admin 
+				<where>
+					consumeorder.displayid=terminal_admin.displayid and terminal_admin.admin_name=#{name} 
+					<if test="beginTime!=null">
+						and consumeorder.gmtcreate >= #{beginTime}
+					</if>
+					<if test="endTime!=null">
+						and consumeorder.gmtcreate &lt; #{endTime}
+					</if>
+				</where>
+			</otherwise>
+        </choose>
+    </select>
+    
+    <select id="selectTotalIncomeByAdmin" resultType="java.lang.Double">
+    	select sum(consumeorder.payment) from 
+        <choose>
+        	<when test="type==1 || type==2 || type==3 || type==4">
+				consumeorder 
+				<where>
+					<if test="beginTime!=null">
+						and gmtcreate >= #{beginTime}
+					</if>
+					<if test="endTime!=null">
+						and gmtcreate &lt; #{endTime}
+					</if>
+				</where>
+			</when>
+			<otherwise>
+				consumeorder, terminal_admin 
+				<where>
+					consumeorder.displayid=terminal_admin.displayid and and terminal_admin.admin_name=#{name} 
+					<if test="beginTime!=null">
+						and consumeorder.gmtcreate >= #{beginTime}
+					</if>
+					<if test="endTime!=null">
+						and consumeorder.gmtcreate &lt; #{endTime}
+					</if>
+				</where>
+			</otherwise>
+        </choose>
+    </select>
+    
+    <select id="selectDeviceSupplyRecordByAdmin" resultMap="deviceSupplyRecordMap">
+    	select consumeorder.displayid as displayid, terminal.location as location, user.phone as phone, 
+    	consumeorder.payment as payment, consumeorder.flow as flow, consumeorder.gmtcreate as time from 
+    	<choose>
+        	<when test="type==1 || type==2 || type==3 || type==4">
+				consumeorder, terminal, user 
+				<where>
+					consumeorder.displayid=terminal.displayid and consumeorder.openid=user.openid 
+					<if test="displayid!=null">
+						and consumeorder.displayid = #{displayid}
+					</if>
+					<if test="location!=null">
+						and terminal.location = #{location}
+					</if>
+					<if test="phone!=null">
+						and user.phone = #{phone}
+					</if>
+					<if test="beginTime!=null">
+						and consumeorder.gmtcreate >= #{beginTime}
+					</if>
+					<if test="endTime!=null">
+						and consumeorder.gmtcreate &lt; #{endTime}
+					</if>
+				</where>
+			</when>
+			<otherwise>
+				consumeorder, terminal, terminal_admin 
+				<where>
+					consumeorder.displayid=terminal.displayid and consumeorder.openid=user.openid 
+					and terminal.displayid=terminal_admin.displayid and admin_name=#{name}
+					<if test="displayid!=null">
+						and consumeorder.displayid = #{displayid}
+					</if>
+					<if test="location!=null">
+						and terminal.location = #{location}
+					</if>
+					<if test="phone!=null">
+						and user.phone = #{phone}
+					</if>
+					<if test="beginTime!=null">
+						and consumeorder.gmtcreate >= #{beginTime}
+					</if>
+					<if test="endTime!=null">
+						and consumeorder.gmtcreate &lt; #{endTime}
+					</if>
+				</where>
+			</otherwise>
+        </choose>
+    </select>
+    
+    <select id="selectDeviceOfflineAlarmByAdmin" resultMap="deviceOfflineAlarmMap">
+    	select terminal.displayid as displayid, terminal.location as location, terminal.simid as simid, terminal.imei as imei, 
+    		terminalofflinerecord.gmtcreate as lastConnectTime, 
+    		UNIX_TIMESTAMP(terminalofflinerecord.gmtmodified) - UNIX_TIMESTAMP(terminalofflinerecord.gmtcreate) as offlineTime from 
+    	<choose>
+        	<when test="type==1 || type==2 || type==3 || type==4">
+				terminal, terminalofflinerecord 
+				<where>
+					terminal.imei=terminalofflinerecord.imei
+					<if test="displayid!='all'">
+						and terminal.displayid = #{displayid}
+					</if>
+					<if test="beginTime!=null">
+						and terminalofflinerecord.gmtcreate >= #{beginTime}
+					</if>
+					<if test="endTime!=null">
+						and terminalofflinerecord.gmtcreate &lt; #{endTime}
+					</if>
+				</where>
+			</when>
+			<otherwise>
+				terminal, terminalofflinerecord, terminal_admin 
+				<where>
+					terminal.imei=terminalofflinerecord.imei and terminal.displayid=terminal_admin.displayid and terminal_admin.admin_name=#{name}
+					<if test="displayid!='all'">
+						and terminal.displayid = #{displayid}
+					</if>
+					<if test="beginTime!=null">
+						and terminalofflinerecord.gmtcreate >= #{beginTime}
+					</if>
+					<if test="endTime!=null">
+						and terminalofflinerecord.gmtcreate &lt; #{endTime}
+					</if>
+				</where>
+			</otherwise>
+        </choose>
+    </select>
+    
+    <select id="selectDeviceSupplyInfo" resultMap="deviceSupplyInfoMap">
+    	select terminal.displayid as displayid, terminal.location as location, terminal.gmtcreate as time, 
+    		SUM(CASE WHEN to_days(consumeorder.gmtcreate) = to_days(now()) THEN `flow` ELSE 0 END) as dailyFlow, 
+    		SUM(CASE WHEN DATE_FORMAT( consumeorder.gmtcreate, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' ) THEN `flow` ELSE 0 END) as monthFlow, 
+    		SUM(CASE WHEN to_days(consumeorder.gmtcreate) = to_days(now()) THEN `payment` ELSE 0 END) as dailyIncome, 
+    		SUM(CASE WHEN DATE_FORMAT( consumeorder.gmtcreate, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' ) THEN `payment` ELSE 0 END) as monthIncome 
+    		from 
+    	<choose>
+        	<when test="type==1 || type==2 || type==3 || type==4">
+				terminal, consumeorder 
+				<where>
+					terminal.displayid=consumeorder.displayid
+					<if test="displayid!='all'">
+						and terminal.displayid = #{displayid}
+					</if>
+					<if test="location!=null">
+						and terminal.location = #{location}
+					</if>
+				</where>
+			</when>
+			<otherwise>
+				terminal, consumeorder, terminal_admin 
+				<where>
+					terminal.displayid=consumeorder.displayid and terminal.displayid=terminal_admin.displayid and terminal_admin.admin_name=#{name}
+					<if test="displayid!='all'">
+						and terminal.displayid = #{displayid}
+					</if>
+					<if test="location!=null">
+						and terminal.location = #{location}
+					</if>
+				</where>
+			</otherwise>
+        </choose>
+        group by terminal.displayid, terminal.location, terminal.gmtcreate
+    </select>
+    
+    <insert id="insertTerminal" useGeneratedKeys="true" keyProperty="id" parameterType="com.terabits.meta.po.TerminalPO">
+    	insert into terminal (imei, deviceid, displayid, webid, state, location, simid, simremain, gmtcreate, gmtmodified) values
+    	(#{imei}, #{deviceid}, #{displayid}, #{webid}, #{simid}, #{location}, #{simremain}, now(), now())
+    </insert>
+    
+    <insert id="addAdminToTerminal" parameterType="Map">
+    	insert into terminal_admin (displayid, admin_name, gmtcreate, gmtmodified) values
+    	<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+    		#{item.displayid}, #{item.admin_name}, now(), now()
+    	</foreach>
+    </insert>
+    
+    <delete id="deleteTerminal" parameterType="java.lang.String">
+    	delete from terminal where displayid=#{displayid}
+    </delete>
+    
+    <select id="selectTerminalByDisplayid" parameterType="java.lang.String" resultMap="terminalMap">
+    	select * from terminal where displayid=#{displayid}
+    </select>
+    
+    <select id="selectTerminalByImei" parameterType="java.lang.String" resultMap="terminalMap">
+    	select * from terminal where imei=#{imei}
+    </select>
+    
+    <update id="updateTerminalWebid" parameterType="java.lang.String">
+    	update terminal set webid=#{webid} where displayid=#{displayid}
+    </update>
+    
+    <select id="selectOfflineCounts" resultType="java.lang.Integer">
+    	select count(*) from 
+    	<choose>
+        	<when test="type==1 || type==2 || type==3 || type==4">
+				terminal, terminalofflinerecord 
+				<where>
+					terminal.imei=terminalofflinerecord.imei
+					<if test="displayid!='all'">
+						and terminal.displayid = #{displayid}
+					</if>
+					<if test="beginTime!=null">
+						and terminalofflinerecord.gmtcreate >= #{beginTime}
+					</if>
+					<if test="endTime!=null">
+						and terminalofflinerecord.gmtcreate &lt; #{endTime}
+					</if>
+				</where>
+			</when>
+			<otherwise>
+				terminal, terminalofflinerecord, terminal_admin
+				<where>
+					terminal.imei=terminalofflinerecord.imei and terminal.displayid=terminal_admin.displayid and terminal_admin.admin_name=#{name}
+					<if test="displayid!='all'">
+						and terminal.displayid = #{displayid}
+					</if>
+					<if test="beginTime!=null">
+						and terminalofflinerecord.gmtcreate >= #{beginTime}
+					</if>
+					<if test="endTime!=null">
+						and terminalofflinerecord.gmtcreate &lt; #{endTime}
+					</if>
+				</where>
+			</otherwise>
+        </choose>
+    </select>
+    
+    <select id="selectTerminalByAdmin" resultMap="terminalMap">
+    	select * from 
+    	<choose>
+        	<when test="type==1 || type==2 || type==3 || type==4">
+				terminal 
+				<where>
+					<if test="displayid!='all'">
+						and terminal.displayid = #{displayid}
+					</if>
+				</where>
+			</when>
+			<otherwise>
+				terminal, terminal_admin
+				<where>
+					terminal.displayid=terminal_admin.displayid and terminal_admin.admin_name=#{name}
+					<if test="displayid!='all'">
+						and terminal.displayid = #{displayid}
+					</if>
+				</where>
+			</otherwise>
+        </choose>
+    </select>
+    
+    <select id="selectDeviceSupplyQuery">
+    </select>
+</mapper>

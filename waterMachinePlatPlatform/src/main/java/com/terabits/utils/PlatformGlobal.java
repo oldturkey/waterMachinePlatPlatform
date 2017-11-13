@@ -1,17 +1,15 @@
 package com.terabits.utils;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.terabits.constant.Constant;
 import com.terabits.constant.HuaweiPlatformGlobal;
-//import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import net.sf.json.JSONObject;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.HttpResponse;
-import org.apache.http.entity.StringEntity;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.HashMap;
 import java.util.Map;
+
+//import jdk.nashorn.api.scripting.ScriptObjectMirror;
 
 /**
  * Created by Administrator on 2017/5/27.
@@ -67,8 +65,8 @@ public class PlatformGlobal {
         String accessToken = login(httpsUtil);
 
         //Please make sure that the following parameter values have been modified in the Constant file.
-        String appId = Constant.APP_ID;
-        String urlReg = Constant.REGISTER_DEVICE;
+        String appId = HuaweiPlatformGlobal.APP_ID;
+        String urlReg = HuaweiPlatformGlobal.REGISTER_DEVICE;
 
         //please replace the verifyCode and nodeId and timeout, when you use the demo.
         System.out.println("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
@@ -157,7 +155,7 @@ public class PlatformGlobal {
         String appId = HuaweiPlatformGlobal.APP_ID;
 
         //please replace the deviceId, when you use the demo.
-        String urlDelete = Constant.DELETE_DEVICE + "/" + deviceId;
+        String urlDelete = HuaweiPlatformGlobal.DELETE_DEVICE + "/" + deviceId;
 
         Map<String, String> header = new HashMap<String, String>();
         header.put("app_key", appId);

@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.terabits.mapper.UserMapper">
+
+    <resultMap id="rechargeMap" type="com.terabits.meta.po.User.RechargeOrderPO">
+        <id property="id" column="id" javaType="java.lang.Integer"></id>
+        <result property="state" column="state" javaType="java.lang.Integer"></result>
+        <result property="orderId" column="orderid" javaType="java.lang.String"></result>
+        <result property="tradeNo" column="tradeno" javaType="java.lang.String"></result>
+        <result property="openId" column="openid" javaType="java.lang.String"></result>
+        <result property="present" column="present" javaType="java.lang.Double"></result>
+        <result property="payment" column="payment" javaType="java.lang.Double"></result>
+        <result property="gmtCreate" column="gmtcreate" javaType="java.lang.String"></result>
+        <result property="gmtModified" column="gmtmodified" javaType="java.lang.String"></result>
+    </resultMap>
+
+    <resultMap id="consumeOrderMap" type="com.terabits.meta.po.User.ConsumeOrderPO">
+        <id property="id" column="id" javaType="java.lang.Integer"></id>
+        <result property="orderNo" column="orderno" javaType="java.lang.String"></result>
+        <result property="openId" column="openid" javaType="java.lang.String"></result>
+        <result property="displayId" column="displayid" javaType="java.lang.String"></result>
+        <result property="payment" column="payment" javaType="java.lang.Double"></result>
+        <result property="flow" column="flow" javaType="java.lang.Double"></result>
+        <result property="gmtCreate" column="gmtcreate" javaType="java.lang.String"></result>
+        <result property="gmtModify" column="gmtmodify" javaType="java.lang.String"></result>
+    </resultMap>
+
+    <resultMap id="userMap" type="com.terabits.meta.po.User.UserPO">
+        <id property="id" column="id" javaType="java.lang.Integer"></id>
+        <result property="openId" column="openid" javaType="java.lang.String"></result>
+        <result property="nickName" column="nickname" javaType="java.lang.String"></result>
+        <result property="phone" column="phone" javaType="java.lang.String"></result>
+        <result property="recharge" column="recharge" javaType="java.lang.Double"></result>
+        <result property="present" column="present" javaType="java.lang.Double"></result>
+        <result property="sex" column="sex" javaType="java.lang.Integer"></result>
+        <result property="language" column="language" javaType="java.lang.String"></result>
+        <result property="city" column="city" javaType="java.lang.String"></result>
+        <result property="province" column="province" javaType="java.lang.String"></result>
+        <result property="country" column="country" javaType="java.lang.String"></result>
+        <result property="headimgurl" column="headimgurl" javaType="java.lang.String"></result>
+        <result property="gmtCreate" column="gmtcreate" javaType="java.lang.String"></result>
+        <result property="gmtModify" column="gmtmodify" javaType="java.lang.String"></result>
+    </resultMap>
+
+    <resultMap id="dynamicConsumeMap" type="com.terabits.meta.vo.UserConsumeVO">
+        <result property="gmtCreate" column="gmtcreate" javaType="java.lang.String"></result>
+        <result property="displayid" column="displayid" javaType="java.lang.String"></result>
+        <result property="phone" column="phone" javaType="java.lang.String"></result>
+        <result property="payment" column="payment" javaType="java.lang.Double"></result>
+    </resultMap>
+
+    <resultMap id="userInfoMap" type="com.terabits.meta.vo.UserVO">
+        <result property="phone" column="phone" javaType="java.lang.String"></result>
+        <result property="openid" column="openid" javaType="java.lang.String"></result>
+        <result property="nickname" column="nickname" javaType="java.lang.String"></result>
+        <result property="sex" column="sex" javaType="java.lang.Integer"></result>
+        <result property="location" column="location" javaType="java.lang.String"></result>
+        <result property="time" column="time" javaType="java.lang.String"></result>
+        <result property="remain" column="remain" javaType="java.lang.Double"></result>
+        <result property="consume" column="consume" javaType="java.lang.Double"></result>
+        <result property="recharge" column="recharge" javaType="java.lang.Double"></result>
+        <result property="present" column="present" javaType="java.lang.Double"></result>
+    </resultMap>
+    
+    <resultMap id="sumConsumeMap" type="com.terabits.meta.bo.ConsumeBO">
+        <result property="openId" column="openid" javaType="java.lang.String"></result>
+        <result property="consume" column="consume" javaType="java.lang.Double"></result>
+    </resultMap>
+
+    <resultMap id="sumRechargeMap" type="com.terabits.meta.bo.RechargeBO">
+        <result property="openId" column="openid" javaType="java.lang.String"></result>
+        <result property="recharge" column="recharge" javaType="java.lang.Double"></result>
+    </resultMap>
+
+    <resultMap id="sumPresentMap" type="com.terabits.meta.bo.PresentBO">
+        <result property="phone" column="phone" javaType="java.lang.String"></result>
+        <result property="present" column="present" javaType="java.lang.Double"></result>
+    </resultMap>
+    <select id="selectConsumeOrderByDisplayId" parameterType="java.lang.String" resultMap="consumeOrderMap">
+        SELECT * FROM consumeorder WHERE displayid=#{displayId} and state=66
+    </select>
+
+    <select id="selectConsumeOrderByOpenIdAndTime" resultMap="consumeOrderMap">
+        select * from consumeorder
+        <where>
+            openid=#{param1}
+            <if test="param2 != null and param2 != ''">
+                and gmtcreate >= #{param2}
+            </if>
+            <if test="param3 != null and param3 != ''">
+                and gmtcreate &lt; #{param3}
+            </if>
+        </where>
+        order by gmtcreate desc
+    </select>
+
+    <!--多个参数不能用parameterType，且SQL语句中用arg来代替-->
+    <select id="selectConsumeOrderByTime" resultMap="consumeOrderMap">
+        select * from consumeorder where <![CDATA[displayid=#{param1} and gmtcreate >= #{param2} and gmtcreate <#{param3} and state=66]]>
+    </select>
+
+    <select id="selectUserByNumber" resultMap="userMap">
+        SELECT * FROM user WHERE phone=#{phone}
+    </select>
+
+    <update id="updateUser" parameterType="com.terabits.meta.po.User.UserPO">
+        UPDATE user SET present=#{present} WHERE openid=#{openId}
+    </update>
+
+    <select id="selectAllUser" resultMap="userMap">
+        select * from user WHERE LENGTH (phone)=11
+    </select>
+
+    <select id="selectAllRechargeRecord" parameterType="com.terabits.meta.bo.TimeSpanBO" resultMap="rechargeMap">
+        select * from rechargerecord
+        <where>
+            tradeno is not null
+            <if test="beginTime != null and beginTime != ''">
+                and gmtcreate >= #{beginTime}
+            </if>
+            <if test="endTime != null and endTime != ''">
+                and gmtcreate &lt; #{endTime}
+            </if>
+        </where>
+        order by gmtcreate desc
+    </select>
+
+    <select id="selectAllConsumption" parameterType="com.terabits.meta.bo.TimeSpanBO" resultMap="consumeOrderMap">
+        select * from consumeorder
+        <where>
+            <if test="beginTime != null and beginTime != ''">
+                and gmtcreate >= #{beginTime}
+            </if>
+            <if test="endTime != null and endTime != ''">
+                and gmtcreate &lt; #{endTime}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectNewUserByTime" resultType="java.lang.Integer" parameterType="com.terabits.meta.bo.TimeSpanBO">
+        SELECT COUNT(*) FROM user
+        <where>LENGTH (phone)=11
+            <if test="beginTime != null and beginTime != ''">
+                and gmtcreate >= #{beginTime}
+            </if>
+            <if test="endTime != null and endTime != ''">
+                and gmtcreate &lt; #{endTime}
+            </if>
+        </where>
+    </select>
+
+    <select id="sumConsumePaymentByOpenIdAndTime" resultType="java.lang.Double">
+        SELECT CASE WHEN SUM(payment) IS NULL THEN 0 ELSE SUM(payment) END FROM consumeorder
+        <where>
+            <if test="param1 != null and param1 != ''">
+                openid=#{param1}
+            </if>
+            <if test="param2.beginTime != null and param2.beginTime != ''">
+                and gmtcreate >= #{param2.beginTime}
+            </if>
+            <if test="param2.endTime != null and param2.endTime != ''">
+                and gmtcreate &lt;= #{param2.endTime}
+            </if>
+        </where>
+    </select>
+
+    <select id="sumFlowByOpenIdAndTime" resultType="java.lang.Double">
+        SELECT CASE WHEN SUM(flow) IS NULL THEN 0 ELSE SUM(flow) END FROM consumeorder
+        <where>
+            state=66
+            <if test="param1 != null and param1 != ''">
+                and openid=#{param1}
+            </if>
+            <if test="param2.beginTime != null and param2.beginTime != ''">
+                and gmtcreate >= #{param2.beginTime}
+            </if>
+            <if test="param2.endTime != null and param2.endTime != ''">
+                and gmtcreate &lt;= #{param2.endTime}
+            </if>
+        </where>
+    </select>
+
+    <select id = "selectDynamicConsumeRecord" resultMap="dynamicConsumeMap">
+        select consumeorder.displayid as displayid, user.phone as phone,
+        consumeorder.payment as payment, consumeorder.gmtcreate as gmtcreate from consumeorder, terminal, user
+        <where>
+            consumeorder.displayid=terminal.displayid and consumeorder.openid=user.openid
+            <if test="location != null and location != ''">
+                and terminal.location like '%${location}%'
+            </if>
+            <if test="displayid != null and displayid != ''">
+                and consumeorder.displayid = #{displayid}
+            </if>
+            <if test="phone != null and phone != ''">
+                and user.phone = #{phone}
+            </if>
+            <if test="beginTime != null and beginTime != ''">
+                and consumeorder.gmtcreate >= #{beginTime}
+            </if>
+            <if test="endTime != null and endTime != ''">
+                and consumeorder.gmtcreate &lt; #{endTime}
+            </if>
+        </where>
+    </select>
+
+    <select id = "userInfo" parameterType="String" resultMap="userInfoMap">
+        select phone as phone, openid as openid, nickname as nickname, sex as sex, city as location, gmtcreate as time,
+        recharge + present as remain from user
+        <where>
+            <if test="_parameter != null and _parameter != ''">
+                phone = #{userPhone}
+            </if>
+            <if test="_parameter == null">
+                phone is not null
+            </if>
+        </where>
+    </select>
+
+    <select id = "sumPersonalConsume" parameterType="String" resultMap="sumConsumeMap">
+        select u.openid as openid, SUM(s.payment) as consume from user u, consumeorder s
+        <where>
+            s.openid = u.openid
+            <if test="_parameter != null and _parameter != ''">
+                u.openid = #{openId}
+            </if>
+        </where>
+        GROUP BY u.openid
+    </select>
+
+    <select id = "sumPersonalRecharge" parameterType="String" resultMap="sumRechargeMap">
+        select u.openid as openid, SUM(r.payment) as recharge from user u, rechargerecord r
+        <where>
+            r.openid = u.openid
+            <if test="_parameter != null and _parameter != ''">
+                u.openid = #{openId}
+            </if>
+        </where>
+        GROUP BY u.openid
+    </select>
+
+    <select id = "selectPersonalPresent" parameterType="String" resultMap="sumPresentMap">
+        select u.phone as phone, SUM(p.money) as present from user u, present p
+        <where>
+            p.phone = u.phone
+            <if test="_parameter != null and _parameter != ''">
+                u.phone = #{phone}
+            </if>
+        </where>
+        GROUP BY u.phone
+    </select>
+
+
+
+</mapper>

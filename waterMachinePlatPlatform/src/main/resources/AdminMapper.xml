@@ -16,6 +16,14 @@
         <result property="email" column="email" javaType="java.lang.String"></result>
     </resultMap>
 
+    <resultMap id="adminRecordMap" type="com.terabits.meta.po.AdminRecordPO">
+        <id property="id" column="id" javaType="java.lang.Integer"></id>
+        <result property="adminName" column="adminname" javaType="java.lang.String"></result>
+        <result property="phone" column="phone" javaType="java.lang.String"></result>
+        <result property="money" column="money" javaType="java.lang.Double"></result>
+        <result property="gmtCreate" column="gmtcreate" javaType="java.lang.String"></result>
+    </resultMap>
+
     <!-- 在各种标签中的id属性必须和接口中的方法名相同 ， id属性值必须是唯一的，不能够重复使用。parameterType属性指明查询时使用的参数类型，resultType属性指明查询返回的结果集类型-->
     <!-- useGeneratedKeys：（ 仅 对 insert 有 用 ） 这 会 告 诉 MyBatis 使 用 JDBC 的getGeneratedKeys
                 方法来取出由数据（比如：像 MySQL 和 SQLServer 这样的数据库管理系统的自动递增字段）内部生成的主键。默认值： false。 -->
@@ -25,36 +33,53 @@
     <select id="selectAdmin" resultMap="adminMap" parameterType="java.lang.String">
         select * from admin WHERE name=#{name}
     </select>
-    
+
     <select id="selectAllUrl" resultType="java.lang.String">
     	select url from admin_authority
     </select>
-    
-    <select id="selectAllAuthority" resultType="java.lang.Integer" parameterType="java.lang.String" statementType="STATEMENT">
+
+    <select id="selectAllAuthority" resultType="java.lang.Integer" parameterType="java.lang.String"
+            statementType="STATEMENT">
     	select ${column} from admin_authority
     </select>
-    
-    <select id="selectAuthorityByTypeAndUrl" resultType="java.lang.Integer" parameterType="java.lang.String" statementType="STATEMENT">
+
+    <select id="selectAuthorityByTypeAndUrl" resultType="java.lang.Integer" parameterType="java.lang.String"
+            statementType="STATEMENT">
     	select ${column} from admin_authority where url=${url}
     </select>
-    
+
     <update id="updateByAdmin" parameterType="com.terabits.meta.po.AdminPO">
-    	update admin set name=#{name},password=#{password},type=#{type},email=#{email} where id=#{id}
+        update admin set name=#{name},password=#{password},type=#{type},email=#{email} where id=#{id}
     </update>
-    
+
+    <insert id="insertAdminRecord" parameterType="com.terabits.meta.po.AdminRecordPO">
+        INSERT INTO adminrecord(adminname,money,gmtcreate,phone) VALUES (#{adminName},#{money},now(),#{phone})
+    </insert>
+
+    <select id="selectAllAdminRecord" resultMap="adminRecordMap">
+        select * from adminrecord
+        <where>
+            <if test="phone != null and phone != ''">
+                find_in_set(#{phone}, phone)
+            </if>
+        </where>
+        order by gmtcreate desc
+    </select>
+
     <select id="selectAllAdminPO" resultMap="adminMap">
-    	select * from admin
+        select * from admin
     </select>
-    
+
     <select id="selectDisplayidByName" resultType="java.lang.String">
-    	select displayid from terminal_admin where admin_name=#{name}
+        select displayid from terminal_admin where admin_name=#{name}
     </select>
-    
+
     <insert id="insertAdminPO" parameterType="com.terabits.meta.po.AdminPO">
-    	insert into admin (name,password,email,type) values (#{name},#{password},#{email},#{type})
+        insert into admin (name,password,email,type) values (#{name},#{password},#{email},#{type})
     </insert>
-    
+
     <insert id="insertTerminalAdmin" parameterType="com.terabits.meta.po.TerminalAdminPO">
-		insert into terminal_admin (displayid,admin_name,gmtcreate,gmtmodified) values(#{displayid},#{adminName},now(),now())    
+        insert into terminal_admin (displayid,admin_name,gmtcreate,gmtmodified) values(#{displayid},#{adminName},now(),now())
     </insert>
+
 </mapper>

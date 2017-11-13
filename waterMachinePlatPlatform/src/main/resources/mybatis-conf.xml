@@ -6,12 +6,13 @@
     <!-- development:开发模式     work:工作模式 -->
     <environments default="development">
         <environment id="development">
-            <transactionManager type="JDBC" />
+            <transactionManager type="JDBC"/>
             <dataSource type="POOLED">
-                <property name="driver" value="com.mysql.jdbc.Driver" />
-                <property name="url" value="jdbc:mysql://112.124.6.31:3306/watermachine?useUnicode=true&amp;characterEncoding=UTF-8&amp;allowMultiQueries=true"/>
-                <property name="username" value="Zhipeng" />
-                <property name="password" value="123321" />
+                <property name="driver" value="com.mysql.jdbc.Driver"/>
+                <property name="url"
+                          value="jdbc:mysql://112.124.6.31:3306/watermachinetest?useUnicode=true&amp;characterEncoding=UTF-8&amp;allowMultiQueries=true"/>
+                <property name="username" value="Zhipeng"/>
+                <property name="password" value="123321"/>
                 <!-- 在任意时间存在的活动（也就是正在使用）连接的数量 -->
                 <property name="poolMaximumActiveConnections" value="20"/>
                 <!-- 任意时间存在的空闲连接数 -->
@@ -23,7 +24,14 @@
     </environments>
 
     <mappers>
-        <mapper resource="AdminMapper.xml" />
+        <mapper resource="AdminMapper.xml"/>
+        <mapper resource="DeviceMapper.xml"/>
+        <mapper resource="LogMapper.xml"/>
+        <mapper resource="FeedbackMapper.xml"/>
+        <mapper resource="UserMapper.xml"/>
+        <mapper resource="RechargeOrderMapper.xml"/>
+        <mapper resource="PresentMapper.xml"/>
+        <mapper resource="StatisticMapper.xml"/>
     </mappers>
 
 </configuration>

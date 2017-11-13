@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="watermachine-plateform:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <root id="archive" name="watermachine-plateform.war">
+      <element id="artifact" artifact-name="watermachine-plateform:war exploded" />
+    </root>
+  </artifact>
+</component>

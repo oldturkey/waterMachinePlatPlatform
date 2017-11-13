@@ -18,124 +18,128 @@ import com.terabits.service.AdminService;
 import com.terabits.utils.JWT;
 
 import net.sf.json.JSONObject;
+
 /*********
  * @version V1.0
  * @author Administrator
  */
 @Controller
-public class AccountController 
-{
-	@Autowired
-	private AdminDAO adminDAO;
-	@Autowired
-	private AdminService adminService;
-	//*************************************²éÑ¯ËùÓÐÕË»§»ù±¾ÐÅÏ¢**************************************************************
-	@RequestMapping(value = "/account/info",method = RequestMethod.GET)
-	public @ResponseBody JSONObject getAccount (HttpServletRequest request,
-												HttpServletResponse response,
-												@RequestHeader("Authorization") String token
-												)throws Exception{
-		System.out.println("***********************"+token);
-		JSONObject jsonObject=new JSONObject();
-		AdminPO adminPO = JWT.unsign(token, AdminPO.class);
-		System.out.print("********************************************************");
+public class AccountController {
+    @Autowired
+    private AdminDAO adminDAO;
+    @Autowired
+    private AdminService adminService;
+
+    //*************************************ï¿½ï¿½Ñ¯ï¿½ï¿½ï¿½ï¿½ï¿½Ë»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢**************************************************************
+    @RequestMapping(value = "/account/info", method = RequestMethod.GET)
+    public @ResponseBody
+    JSONObject getAccount(HttpServletRequest request,
+                          HttpServletResponse response,
+                          @RequestHeader("Authorization") String token
+    ) throws Exception {
+        System.out.println("***********************" + token);
+        JSONObject jsonObject = new JSONObject();
+        AdminPO adminPO = JWT.unsign(token, AdminPO.class);
+        System.out.print("********************************************************");
         System.out.print(adminPO);
-		System.out.print("*********************************************************");
-        if (adminPO == null) 
+        System.out.print("*********************************************************");
+        if (adminPO == null)
             jsonObject.put("status", 0);
-        //³¬¼¶¹ÜÀíÔ±¿ÉÒÔ²éÑ¯ËùÓÐÓÃ»§µÄ»ù±¾ÐÅÏ¢ºÍ¹ÜÀíµÄµç±í
-        if(adminPO.getType()==1){
-        	jsonObject.put("status", 1);
-        	jsonObject.put("info", adminService.getAllAccount());
-        }else{
-        	//ÆÕÍ¨¹ÜÀíÔ±Ö»ÄÜ²é¿´×Ô¼ºµÄ»ù±¾ÐÅÏ¢ºÍÏà¹Øµç±í
-        	jsonObject.put("status", 1);
-        	jsonObject.put("info", adminService.getSingleAcount(adminPO));
+        //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô±ï¿½ï¿½ï¿½Ô²ï¿½Ñ¯ï¿½ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½Ä»ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½Í¹ï¿½ï¿½ï¿½Äµï¿½ï¿½
+        if (adminPO.getType() == 1) {
+            jsonObject.put("status", 1);
+            jsonObject.put("info", adminService.getAllAccount());
+        } else {
+            //ï¿½ï¿½Í¨ï¿½ï¿½ï¿½ï¿½Ô±Ö»ï¿½Ü²é¿´ï¿½Ô¼ï¿½ï¿½Ä»ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½Øµï¿½ï¿½
+            jsonObject.put("status", 1);
+            jsonObject.put("info", adminService.getSingleAcount(adminPO));
         }
-		return jsonObject;
-	}
-	
-	
-	//************************************ÐÞ¸ÄÃÜÂë***************************************************************
-	@RequestMapping(value = "/account/password/change",method = RequestMethod.POST)
-	public @ResponseBody JSONObject changePassword (HttpServletRequest request,
-													HttpServletResponse response,
-													@RequestHeader("Authorization") String token,
-													@RequestParam("account") String account,
-													@RequestParam("password") String password,
-													@RequestParam("changePassword") String changePassword
-													)throws Exception{
-		JSONObject jsonObject=new JSONObject();
-		AdminPO adminPO = JWT.unsign(token, AdminPO.class);
-		System.out.print("********************************************************");
+        return jsonObject;
+    }
+
+
+    //************************************ï¿½Þ¸ï¿½ï¿½ï¿½ï¿½ï¿½***************************************************************
+    @RequestMapping(value = "/account/password/change", method = RequestMethod.POST)
+    public @ResponseBody
+    JSONObject changePassword(HttpServletRequest request,
+                              HttpServletResponse response,
+                              @RequestHeader("Authorization") String token,
+                              @RequestParam("account") String account,
+                              @RequestParam("password") String password,
+                              @RequestParam("changePassword") String changePassword
+    ) throws Exception {
+        JSONObject jsonObject = new JSONObject();
+        AdminPO adminPO = JWT.unsign(token, AdminPO.class);
+        System.out.print("********************************************************");
         System.out.print(adminPO);
-		System.out.print("*********************************************************");
+        System.out.print("*********************************************************");
         if (adminPO == null) {
             jsonObject.put("status", 0);
             return jsonObject;
         }
-        
-        if(!adminPO.getName().equals(account)){
-        	jsonObject.put("status", 2);
-        	return jsonObject;
+
+        if (!adminPO.getName().equals(account)) {
+            jsonObject.put("status", 2);
+            return jsonObject;
         }
-        if(!adminPO.getPassword().equals(password)){
-        	jsonObject.put("status", 3);
-        	return jsonObject;
+        if (!adminPO.getPassword().equals(password)) {
+            jsonObject.put("status", 3);
+            return jsonObject;
         }
         adminPO.setPassword(changePassword);
         adminDAO.updateByAdmin(adminPO);
         jsonObject.put("status", 1);
-		return jsonObject;
-	}
-	
+        return jsonObject;
+    }
 
-	//************************************´´½¨ÐÂÓÃ»§***************************************************************
-	@RequestMapping(value = "/account/create",method = RequestMethod.POST)
-	public @ResponseBody JSONObject createAcount (HttpServletRequest request,
-												  HttpServletResponse response,
-												  @RequestHeader("Authorization") String token,
-												  @RequestParam("account") String account,
-												  @RequestParam("password") String password,
-												  @RequestParam("email") String email,
-												  @RequestParam(value="displayid[]") String[] displayid,
-												  @RequestParam("type") String type
-												 )throws Exception{
-		/*****************************
-		 * ÑéÖ¤token*
-		 */
-		JSONObject jsonObject=new JSONObject();
-		AdminPO adminPO = JWT.unsign(token, AdminPO.class);
-		System.out.print("********************************************************");
+
+    //************************************ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã»ï¿½***************************************************************
+    @RequestMapping(value = "/account/create", method = RequestMethod.POST)
+    public @ResponseBody
+    JSONObject createAcount(HttpServletRequest request,
+                            HttpServletResponse response,
+                            @RequestHeader("Authorization") String token,
+                            @RequestParam("account") String account,
+                            @RequestParam("password") String password,
+                            @RequestParam("email") String email,
+                            @RequestParam(value = "displayid[]") String[] displayid,
+                            @RequestParam("type") String type
+    ) throws Exception {
+        /*****************************
+         * ï¿½ï¿½Ö¤token*
+         */
+        JSONObject jsonObject = new JSONObject();
+        AdminPO adminPO = JWT.unsign(token, AdminPO.class);
+        System.out.print("********************************************************");
         System.out.print(adminPO);
-		System.out.print("*********************************************************");
+        System.out.print("*********************************************************");
         if (adminPO == null) {
             jsonObject.put("status", 0);
             return jsonObject;
         }
-		/****************************
-		 * ÅÐ¶Ï¹ÜÀíÔ±ÊÇ·ñÓµÓÐ´´½¨ÓÃ»§È¨ÏÞ*
-		 */
-        if(adminPO.getType()!=1){
-        	jsonObject.put("status", 2);
-        	return jsonObject;
+        /****************************
+         * ï¿½Ð¶Ï¹ï¿½ï¿½ï¿½Ô±ï¿½Ç·ï¿½Óµï¿½Ð´ï¿½ï¿½ï¿½ï¿½Ã»ï¿½È¨ï¿½ï¿½*
+         */
+        if (adminPO.getType() != 1) {
+            jsonObject.put("status", 2);
+            return jsonObject;
         }
-		/****************************
-		 * ´´½¨ÐÂÓÃ»§£¬²¢¸üÐÂterminalAdmin±í¸ñ*
-		 */
-		AdminPO newAdminPO=new AdminPO();
-		newAdminPO.setName(account);
-		newAdminPO.setPassword(password);
-		newAdminPO.setEmail(email);
-		newAdminPO.setType(Integer.parseInt(type));
-		int result=adminDAO.insertAdminPO(newAdminPO);
-		for (String device:displayid){
-			TerminalAdminPO terminalAdminPO=new TerminalAdminPO();
-			terminalAdminPO.setAdminName(account);
-			terminalAdminPO.setDisplayid(device);
-			adminDAO.insertTerminalAdmin(terminalAdminPO);
-		}
-		jsonObject.put("status", 1);
-		return jsonObject;
-	}
+        /****************************
+         * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½terminalAdminï¿½ï¿½ï¿½*
+         */
+        AdminPO newAdminPO = new AdminPO();
+        newAdminPO.setName(account);
+        newAdminPO.setPassword(password);
+        newAdminPO.setEmail(email);
+        newAdminPO.setType(Integer.parseInt(type));
+        int result = adminDAO.insertAdminPO(newAdminPO);
+        for (String device : displayid) {
+            TerminalAdminPO terminalAdminPO = new TerminalAdminPO();
+            terminalAdminPO.setAdminName(account);
+            terminalAdminPO.setDisplayid(device);
+            adminDAO.insertTerminalAdmin(terminalAdminPO);
+        }
+        jsonObject.put("status", 1);
+        return jsonObject;
+    }
 }
